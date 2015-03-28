@@ -26,7 +26,7 @@ all:
 .PHONY: import-whonix-keys
 import-whonix-keys:
 	@if [ "$$WHONIX" == "1" ]; then \
-	    export GNUPGHOME="$(SCRIPT_DIR)/keyrings/git"; \
+	    export GNUPGHOME="$(PWD)/keyrings/git"; \
             if ! gpg --list-keys 916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA >/dev/null 2>&1; then \
                 echo "**********************************************************"; \
                 echo "*** You've selected Whonix build, this will import     ***"; \
@@ -36,18 +36,22 @@ import-whonix-keys:
                 read answer; \
                 [ "$$answer" == "y" ] || exit 1; \
                 echo '916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA:6:' | gpg --import-ownertrust; \
-                gpg --import $(SCRIPT_DIR)/$(SRC_DIR)/template-whonix/keys/whonix-developer-patrick.asc; \
+                gpg --import $(PWD)/$(SRC_DIR)/template-whonix/keys/whonix-developer-patrick.asc; \
                 gpg --list-keys; \
             fi; \
 	    touch "$$GNUPGHOME/pubring.gpg"; \
 	fi
 
+.PHONY: get-sources
 get-sources:
 	@true
 
+.PHONY: import-keys
 import-keys: import-whonix-keys
 	@true
 
+.PHONY: verify-sources
 verify-sources: import-keys
 	@true
 
+# vim: filetype=make
