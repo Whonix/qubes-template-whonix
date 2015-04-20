@@ -32,6 +32,12 @@ installQubesRepo
 aptInstall python-guimessages whonix-setup-wizard qubes-whonix
 uninstallQubesRepo
 
+#### '----------------------------------------------------------------------
+info ' Re-update locales'
+####   (Locales get reset during package installation sometimes)
+#### '----------------------------------------------------------------------
+updateLocale
+
 #### '--------------------------------------------------------------------------
 info ' Cleanup'
 #### '--------------------------------------------------------------------------
