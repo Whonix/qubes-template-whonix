@@ -230,7 +230,7 @@ fi
 
 
 ##### '-------------------------------------------------------------------------
-debug ' Temporarily retore original apt-get for remainder of install process'
+debug ' Temporarily restore original apt-get for remainder of install process'
 ##### '-------------------------------------------------------------------------
 pushd "${INSTALLDIR}/usr/bin" 
 {
