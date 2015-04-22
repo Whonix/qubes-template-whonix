@@ -44,8 +44,12 @@ WHONIX_COMPONENTS :=
 
 # qubes-whonix
 # -----------------------------------------------------------------------------
-export GIT_URL_qubes_whonix = https://github.com/Whonix/qubes-whonix.git
-export BRANCH_qubes_whonix = 9.6.2
+# Upstream
+export GIT_URL_qubes_whonix = https://github.com/nrgaway/qubes-whonix.git
+export BRANCH_qubes_whonix = wip
+
+#export GIT_URL_qubes_whonix = https://github.com/Whonix/qubes-whonix.git
+#export BRANCH_qubes_whonix = 9.6.2
 WHONIX_COMPONENTS += qubes-whonix
 
 # Whonix
@@ -57,8 +61,14 @@ WHONIX_COMPONENTS += Whonix
 # whonix-setup-wizard
 # -----------------------------------------------------------------------------
 export GIT_URL_whonix_setup_wizard = https://github.com/Whonix/whonix-setup-wizard.git
-export BRANCH_whonix_setup_wizard = 0.5-1
+export BRANCH_whonix_setup_wizard = 0.7-1
 WHONIX_COMPONENTS += whonix-setup-wizard
+
+# whonix-repository
+# -----------------------------------------------------------------------------
+export GIT_URL_whonix_repository = https://github.com/Whonix/whonix-repository.git
+export BRANCH_whonix_repository = 1.1-1
+WHONIX_COMPONENTS += whonix-repository
 
 # python-guimessages
 # -----------------------------------------------------------------------------
