@@ -45,11 +45,11 @@ WHONIX_COMPONENTS :=
 # qubes-whonix
 # -----------------------------------------------------------------------------
 # Upstream
-export GIT_URL_qubes_whonix = https://github.com/nrgaway/qubes-whonix.git
-export BRANCH_qubes_whonix = wip
+#export GIT_URL_qubes_whonix = https://github.com/nrgaway/qubes-whonix.git
+#export BRANCH_qubes_whonix = wip
 
 #export GIT_URL_qubes_whonix = https://github.com/Whonix/qubes-whonix.git
-#export BRANCH_qubes_whonix = 9.6.2
+export BRANCH_qubes_whonix = 9.6.6
 WHONIX_COMPONENTS += qubes-whonix
 
 # Whonix
