@@ -46,35 +46,23 @@ WHONIX_COMPONENTS :=
 # -----------------------------------------------------------------------------
 # Upstream
 export GIT_URL_qubes_whonix = https://github.com/nrgaway/qubes-whonix.git
-export BRANCH_qubes_whonix = wip
+export BRANCH_qubes_whonix = 10.0.1
 
 #export GIT_URL_qubes_whonix = https://github.com/Whonix/qubes-whonix.git
-#export BRANCH_qubes_whonix = 9.6.2
+#export BRANCH_qubes_whonix = 10.0.1
 WHONIX_COMPONENTS += qubes-whonix
 
 # Whonix
 # -----------------------------------------------------------------------------
 export GIT_URL_Whonix = https://github.com/Whonix/Whonix.git
-export BRANCH_Whonix = 9.6
+export BRANCH_Whonix = 10.0.0.5.5-developers-only
 WHONIX_COMPONENTS += Whonix
 
-# whonix-setup-wizard
+# genmkfile (only required to satisfy qubes-whonix build depends)
 # -----------------------------------------------------------------------------
-export GIT_URL_whonix_setup_wizard = https://github.com/Whonix/whonix-setup-wizard.git
-export BRANCH_whonix_setup_wizard = 0.7-1
-WHONIX_COMPONENTS += whonix-setup-wizard
-
-# whonix-repository
-# -----------------------------------------------------------------------------
-export GIT_URL_whonix_repository = https://github.com/Whonix/whonix-repository.git
-export BRANCH_whonix_repository = 1.1-1
-WHONIX_COMPONENTS += whonix-repository
-
-# python-guimessages
-# -----------------------------------------------------------------------------
-export GIT_URL_python_guimessages = https://github.com/Whonix/python-guimessages.git
-export BRANCH_python_guimessages = 0.3-1
-WHONIX_COMPONENTS += python-guimessages
+export GIT_URL_genmkfile = https://github.com/Whonix/genmkfile.git
+export BRANCH_genmkfile = master
+WHONIX_COMPONENTS += genmkfile
 
 ifndef INCLUDED
 .PHONY: import-keys

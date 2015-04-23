@@ -50,18 +50,19 @@ export WHONIX_BUILD_UNATTENDED_PKG_INSTALL="1"
 
 pushd ~/Whonix
 sudo ~/Whonix/whonix_build \
-    --build $1 \
-    --64bit-linux \
-    --current-sources \
-    --enable-whonix-apt-repository \
-    --whonix-apt-repository-distribution $2 \
-    --install-to-root \
-    --skip-verifiable \
-    --minimal-report \
-    --skip-sanity-tests || { exit 1; }
+    --flavor $1 \
+    -- \
+    --build \
+    --arch amd64 \
+    --kernel linux-image-amd64 \
+    --headers linux-headers-amd64 \
+    --target root \
+    --freshness current \
+    --report minimal \
+    --verifiable minimal \
+    --sanity-tests false || { exit 1; }
 popd
 EOF
-
 
 ##### '-------------------------------------------------------------------------
 debug ' Preparing Whonix for installation'
@@ -86,7 +87,7 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ] && ! [ -f "${INSTALL
     mkdir -p "${INSTALLDIR}/boot/grub"
     cp "${INSTALLDIR}/usr/lib/grub/i386-pc/"* "${INSTALLDIR}/boot/grub"
     rm -f "${INSTALLDIR}/usr/sbin/update-grub"
-    chroot ln -s /bin/true /usr/sbin/update-grub
+    chroot ln -fs /bin/true /usr/sbin/update-grub
 
     #### '----------------------------------------------------------------------
     info ' Adding a user account for Whonix to build with'
@@ -134,9 +135,9 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${
     mount --bind "../Whonix" "${INSTALLDIR}/home/user/Whonix"
 
     if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ]; then
-        BUILD_TYPE="--torgateway"
+        BUILD_TYPE="whonix-gateway"
     elif [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ]; then
-        BUILD_TYPE="--torworkstation"
+        BUILD_TYPE="whonix-workstation"
     else
         error "Incorrent Whonix type \"${TEMPLATE_FLAVOR}\" selected.  Not building Whonix modules"
         error "You need to set TEMPLATE_FLAVOR environment variable to either"
@@ -149,7 +150,6 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${
     mount --bind /dev/pts "${INSTALLDIR}/dev/pts"
 
     chroot su user -c "cd ~; ./whonix_build.sh ${BUILD_TYPE} ${DIST}" || { exit 1; }
-
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
 fi
 
