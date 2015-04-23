@@ -1,0 +1,4 @@
+# This is just a marker configuration file so Whonix makefile can be overridden
+# since it conflicts with qubes-builder
+#
+# include $(GENMKFILE_BOOTSTRAP)/makefile-full
