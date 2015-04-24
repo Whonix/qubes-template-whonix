@@ -64,6 +64,13 @@ sudo ~/Whonix/whonix_build \
 popd
 EOF
 
+# Some Additional Whonix build options
+# ====================================
+# --tb close  # Install tor-browser
+# --allow-uncommitted true
+# --allow-untagged true
+# --testing-frozen-sources  # Jessie; no current sources
+
 ##### '-------------------------------------------------------------------------
 debug ' Preparing Whonix for installation'
 ##### '-------------------------------------------------------------------------
@@ -75,8 +82,6 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ] && ! [ -f "${INSTALL
     #### '----------------------------------------------------------------------
     pushd "${WHONIX_DIR}"
     {
-        #git add Makefile || true
-        #git commit Makefile -m 'Added Makefile' || true
         su $(logname) -c "git submodule update --init --recursive";
     }
     popd
