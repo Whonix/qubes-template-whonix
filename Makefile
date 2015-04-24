@@ -46,10 +46,10 @@ WHONIX_COMPONENTS :=
 # -----------------------------------------------------------------------------
 # Upstream
 export GIT_URL_qubes_whonix = https://github.com/nrgaway/qubes-whonix.git
-export BRANCH_qubes_whonix = 10.0.1
+export BRANCH_qubes_whonix = Whonix10
 
 #export GIT_URL_qubes_whonix = https://github.com/Whonix/qubes-whonix.git
-#export BRANCH_qubes_whonix = 10.0.1
+#export BRANCH_qubes_whonix = 10.0.2
 WHONIX_COMPONENTS += qubes-whonix
 
 # Whonix
