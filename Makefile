@@ -19,6 +19,9 @@
 #
 #
 
+_self := $(strip $(lastword 1,$(subst /, ,$(dir $(lastword $(MAKEFILE_LIST))))))
+-include $(BUILDER_DIR)/$(SRC_DIR)/$(_self)/components.conf
+
 all:
 	@true
 
@@ -40,31 +43,6 @@ import-whonix-keys:
 	fi; \
 	touch "$$GNUPGHOME/pubring.gpg"
 
-WHONIX_COMPONENTS := 
-
-# qubes-whonix
-# -----------------------------------------------------------------------------
-# Upstream
-export GIT_URL_qubes_whonix = https://github.com/nrgaway/qubes-whonix.git
-export BRANCH_qubes_whonix = Whonix10
-
-#export GIT_URL_qubes_whonix = https://github.com/Whonix/qubes-whonix.git
-#export BRANCH_qubes_whonix = 10.0.2
-WHONIX_COMPONENTS += qubes-whonix
-
-# Whonix
-# -----------------------------------------------------------------------------
-export GIT_URL_Whonix = https://github.com/Whonix/Whonix.git
-export BRANCH_Whonix = 10.0.0.5.5-developers-only
-WHONIX_COMPONENTS += Whonix
-
-# genmkfile (only required to satisfy qubes-whonix build depends)
-# -----------------------------------------------------------------------------
-export GIT_URL_genmkfile = https://github.com/Whonix/genmkfile.git
-export BRANCH_genmkfile = master
-WHONIX_COMPONENTS += genmkfile
-
-ifndef INCLUDED
 .PHONY: import-keys
 import-keys: import-whonix-keys
 	@true
@@ -87,6 +65,5 @@ get-sources:
 .PHONY: verify-sources
 verify-sources:
 	@true
-endif
 
 # vim: filetype=make
