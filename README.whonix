@@ -14,7 +14,7 @@
 #
 # The example configuration file will build:
 # ------------------------------------------
-# wheezy-whonix-gateway wheezy jessie
+# jessie-whonix-gateway wheezy jessie
 #
 # Build Steps
 # -----------
