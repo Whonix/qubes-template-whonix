@@ -15,9 +15,11 @@
 #
 # TODO - FIX:
 # ------------------------------------------------------------------------------
-# -
+# - dialog boxes partial display as semi-transparent (wheezy + jessie)
+#   - test to see if that is still case with gnome enable workstation
+#   - possible QT or TrollTech.conf issue?
 #
-# BUGS:
+# WHONIX RELATED BUGS:
 # ------------------------------------------------------------------------------
 # 1700_install-packages:450 --> "$WHONIX_SOURCE_HELP_STEPS_FOLDER/remove-local-temp-apt-repo"
 # INFO: Setting... export UWT_DEV_PASSTHROUGH="1"
