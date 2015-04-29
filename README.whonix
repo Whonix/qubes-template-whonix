@@ -177,13 +177,13 @@ if ! [ -f "builder.conf" ]; then
     ln -fs example-configs/whonix.conf builder.conf
 fi
 
-if ! [ "$(make about)" == "whonix.conf" ]; then
+make about | grep -q "^whonix.conf$" || {
     echo "Incorrect builder.conf file selected for building whonix templates"
     echo "Copy and edit the example whonix configuration file to build whonix or Debian templates"
     echo "cp ./example-configs/whonix.conf ./builder.conf"
     echo "Exiting..."
     exit 1
-fi
+}
 
 # Get / update sources
 make get-sources || exit 1
