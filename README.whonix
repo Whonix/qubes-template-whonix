@@ -36,8 +36,8 @@
 #
 #
 # Import the Qubes master key 
-gpg --recv-keys 0x36879494 
-gpg --recv-keys 0x36879494 
+gpg --keyserver pgp.mit.edu --recv-keys 0x36879494 
+gpg --keyserver pgp.mit.edu --recv-keys 0x36879494 
 #
 # Verify its fingerprint, set as 'trusted'. 
 # This is described here: 
