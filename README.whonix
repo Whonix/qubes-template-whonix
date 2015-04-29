@@ -1,38 +1,40 @@
-#!/bin/bash
+﻿#!/bin/bash
 # vim: set ts=4 sw=4 sts=4 et :
 
 # ==============================================================================
-# Install a debian template 
-# -------------------------
-# jessie, wheezy, whonix-gateway, whonix-workstation
-#
-# Follow the steps within this README to create a debain based template
+#                  Build Whonix Gateway and Workstation
+# ==============================================================================
+# Follow the steps within this README to create a Whonix based template
 # or just execute this README to create the defaults as shown in the 
-# examples
+# examples.
 #
-# Builder configuration file is located in ./example-configs/whonix.conf
+# This README will show 3 different methods to build the templates:
 #
-# The example configuration file will build:
-# ------------------------------------------
-# wheezy-whonix-gateway wheezy jessie
+# METHOD 1: 'Running this script'
+#   - Will install keys, but they are not verified.  Its best to manually
+#     download, verify and import the keys yourself.
+#   - Just copy this file to `qubes-builder` root directory and run it
+#     (./README.whonix)
+#   - Offers to custom configuration options
 #
-# Build Steps
-# -----------
-# cp example-configs/whonix.conf builder.conf
-# make clean-all  # Will delete all existing images; use with caution
-# make get-sources
-# make template-modules
-# make template
+# METHOD 2: Using 'setup'
+#    - Detailed instructions are included to use 'setup' program to 
+#      assist in creating a custom builder configuration file.  It
+#      may be worthwhile to also read the 'example-configs/templates.conf'
+#      configuration within the `qubes-builder` directory as it is the
+#      master file `setup` uses to create the custom configuration.
+#
+# METHOD 3: Manual configuration
 #
 # ==============================================================================
-# FIRST TIME INSTALLATION NOTES:
-# ------------------------------
-# Before building for the first time, you need to follow the instructions 
-# on the Qubes repo for setting up the Qubes master keys:
-# https://qubes-os.org/wiki/QubesBuilder
+#                  FIRST TIME INSTALLATION NOTES
+# ==============================================================================
+# Although the `setup` program will do this for you, it is still highly
+# recommended that before building for the first time, you follow the 
+# instructions for setting up the Qubes master keys manually:
+#   https://qubes-os.org/wiki/QubesBuilder
 #
-# Here are the steps though (currently Makefile may handle this):
-# 
+#
 # Import the Qubes master key 
 gpg --recv-keys 0x36879494 
 gpg --recv-keys 0x36879494 
@@ -42,7 +44,133 @@ gpg --recv-keys 0x36879494
 # https://wiki.qubes-os.org/trac/wiki/VerifyingSignatures 
 wget http://keys.qubes-os.org/keys/qubes-developers-keys.asc 
 gpg --import qubes-developers-keys.asc 
-# ==============================================================================
+#
+# #############################################################################
+#                   METHOD 2:  BUILD TEMPLATES USING SETUP
+# #############################################################################
+#
+# =============================================================================
+#                     STEP 1 - BUILD CONFIGURATION FILE
+# =============================================================================
+# Run ./setup from the root qubes-builder directory
+#
+# dialog is not installed and required for setup
+# ----------------------------------------------
+#   Press 'Y' to download 'dialog` package
+#
+# Install Keys For:
+# ----------------- 
+#   'Marek Marczykowski-Górecki' (lead developer) and 
+#   'Qubes Master Signing Key'
+#     You will only be prompted to install keys if you have not already
+#     installed them manually. It is a good idea to install them manually
+#     beforehand to better be able to confirm them.  They will always be
+#     verified when running setup as well. Select 'Yes'
+#
+# Choose Qubes Version
+# --------------------
+#   Select Release of Qubes to build for (2 or 3)
+#
+# Choose Repos To Use To Build Packages
+# -------------------------------------
+#   `qubes-` is the official and default stable repo
+#
+# Enable SSH Access
+# -----------------
+#   This dialog will only be displayed if you have an override.conf
+#   file and is used to change the git prefix to allow write access
+#   to the repo if you already have write permission.  Useful for 
+#   developers that have a complete mirror.  Normally you would select
+#   `No`.
+#
+# Build Template Only
+# -------------------
+#   Select 'Yes' unless you are also build an iso
+#
+# Template Distribution Selection
+# -------------------------------
+#   You will not see any `Whonix` options in select DIST_VMS dialog yet
+#   since the package has not yet been downloaded; just choose 'OK' for now
+# 
+# Builder Plugins Selection
+# -------------------------
+#   You need to make sure both 'builder-debian' and 'template-whonix' are
+#   selected, then choose 'OK'
+#
+# At this point, a copy of the generated `builder.conf` will display to
+# show the options you selected.  Scroll up to read it, or edit 'builder.conf'
+# directory
+#
+# =============================================================================
+#                          STEP 2 - DOWNLOAD SOURCES
+# =============================================================================
+# Download all the source files
+#   make get-sources
+#
+# If you have not yet installed the Whonix signing keys, you will be
+# prompted with a disclaimer.  Press 'Y' to accept.
+#
+# =============================================================================
+#                    STEP 3 - CHOOSE WHONIX VERSION TO BUILD
+# =============================================================================
+# Run ./setup again.  Just keep pressing 'ENTER' until you get back to the
+# 'Template Distribution Selection'. (Setup will remember your previous 
+# settings)
+#   Now choose any templates you wish to build and choose 'OK'
+#   Just choose 'OK' on 'Builder Plugins Selection' again as well
+#
+# At this point, a copy of the generated `builder.conf` will display to
+# show the options you selected.  Scroll up to read it, or edit 'builder.conf'
+# directory
+#
+# =============================================================================
+#                          STEP 4 - BUILD TEMPLATE(S)
+# =============================================================================
+# Build the template modules
+#   make qubes-vm
+#
+# Build the templates
+#   make template
+#
+# Once the templates have built (takes about an hour on a fast CPU with SSD)
+# you will see a message that the template is available to install in dom0.
+#
+# Follow the instructions at the END of this file to assist in installing the
+# template in dom0
+# 
+# #############################################################################
+#                   METHOD 3:  BUILD TEMPLATES MANUALLY
+# #############################################################################
+#
+# Builder configuration file is located in ./example-configs/whonix.conf
+# 
+# Build Steps
+# -----------
+# Copy, then edit builder.conf to customize
+# The default configuration is set only to build 'whonix-gateway' so you 
+# would need to edit the file and uncomment out 'whonix-workstation' if you
+# also want to build it.
+#   cp example-configs/whonix.conf builder.conf
+#
+# Clean the repo (WARNING: Will delete all existing images and downloaded
+# source files, even if they are not commited.  You can skip this step
+#   make clean-all
+#
+# Download the source files
+#   make get-sources
+#
+# Build the template modules
+#   make qubes-vm
+#
+# Build the template(s)
+#   make template
+#
+# Once the templates have built (takes about an hour on a fast CPU with SSD)
+# you will see a message that the template is available to install in dom0.
+#
+# Follow the instructions at the END of this file to assist in installing the
+# template in dom0
+#
 
 # Copy the examples/whonix.conf file to builder.conf and edit as needed
 if ! [ -f "builder.conf" ]; then
@@ -51,7 +179,7 @@ fi
 
 if ! [ "$(make about)" == "whonix.conf" ]; then
     echo "Incorrect builder.conf file selected for building whonix templates"
-    echo "Copy and edit the example whonix configuration file to build whonix or debian templates"
+    echo "Copy and edit the example whonix configuration file to build whonix or Debian templates"
     echo "cp ./example-configs/whonix.conf ./builder.conf"
     echo "Exiting..."
     exit 1
@@ -61,7 +189,7 @@ fi
 make get-sources || exit 1
 
 # Build qubes modules
-make template-modules || exit 1
+make qubes-vm || exit 1
 
 # Build templates
 make template || exit 1
