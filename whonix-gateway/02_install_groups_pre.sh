@@ -59,6 +59,10 @@ if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ]; then
     aptInstall ${whonix_build_script_build_dependency}
 
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups"
+    
+    # XXX - TEMP; Overwrite debootstrap snapshot to contain all Whonix updates
+    # If SNAPSHOT=1, Create a snapshot of the already debootstraped image
+    #createSnapshot "debootstrap"
 fi
 
 
@@ -88,6 +92,8 @@ sudo /etc/init.d/haveged start
 
 # Use sudo with clean ENV to build Whonix; any ENV options will be set there
 # ------------------------------------------------------------------------------
+#sudo ~/whonix_build_post $@
+#sudo ~/whonix_build_post $@ 2>/dev/null
 sudo ~/whonix_build_post $@
 EOF
 
@@ -115,14 +121,32 @@ read -r -d '' WHONIX_BUILD_SCRIPT_POST <<'EOF' || true
 # Whonix 11 Hacks (stretch does not exist)
 # XXX: Should be fixed in next tag release
 # ------------------------------------------------------------------------------
-export whonix_build_apt_newer_release_codename="jessie"
+# export whonix_build_apt_newer_release_codename="jessie"
+
+# Whonix11 - help-steps/variables
+# `lsb_release --short -i` is returning 'Whonix', not 'Debain' which causes 
+# error
+export whonix_build_on_operating_system="debian"
+
+# ERROR in ././build-steps.d/2300_run-chroot-scripts-post-d detected!
+# run-parts --verbose --exit-on-error "/usr/lib/anon-dist/chroot-scripts-post.d/"
+# /usr/lib/anon-dist/chroot-scripts-post.d//30_backup_grub_cfg
+# cp /boot/grub/grub.cfg /var/lib/anon-dist/grub-backup/grub.cfg.chroot-post1
+
+# ERROR in /usr/lib/anon-dist/chroot-scripts-post.d//85_update_grub detected!
+# /usr/lib/anon-dist/chroot-scripts-post.d//85_update_grub
+# update-grub
+
+# ERROR in /usr/lib/anon-dist/chroot-scripts-post.d//90_fix_grub detected!
+# cp /boot/grub/grub.cfg /var/lib/anon-dist/grub-backup/grub.cfg.chroot-post4
+
 
 # Disable lintian; cause too many build errors
 # XXX: Will be fixed at some point when lintian error have been fixed for jessie
 # ------------------------------------------------------------------------------
 # `sed` only needed till next tag release
-sudo sed -i "s/make_use_lintian=\"true\"/make_use_lintian=\"false\"/g" "/home/user/Whonix/build-steps.d/1200_create-debian-packages"
-export make_use_lintian="true"
+#sudo sed -i "s/make_use_lintian=\"true\"/make_use_lintian=\"false\"/g" "/home/user/Whonix/build-steps.d/1200_create-debian-packages"
+export make_use_lintian="false"
 
 
 # =============================================================================
@@ -212,11 +236,14 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ] && ! [ -f "${INSTALL
     aptRemove apt-listchanges || true
 
     #### '----------------------------------------------------------------------
-    debug 'XXX: Whonix11 HACK since we running all sections without conditions'
-    debug '     and we are deleting and linking interfaces below'
-    debug 'XXX: Remove interfaces from files directory when this hack not needed'
+    debug 'XXX: Whonix10/11 HACK'
     #### '----------------------------------------------------------------------
     rm -f "${INSTALLDIR}/etc/network/interfaces"
+    cat > "${INSTALLDIR}/etc/network/interfaces" <<'EOF'
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+EOF
 
     #### '----------------------------------------------------------------------
     info ' Copying additional files required for build'
@@ -253,14 +280,18 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${
     mount --bind /dev "${INSTALLDIR}/dev"
     mount --bind /dev/pts "${INSTALLDIR}/dev/pts"
 
-    info 'Executing whonix_build script now...'
-    chroot su user -c "cd ~; ./whonix_build ${BUILD_TYPE} ${DIST}" || { exit 1; }
+    # Enable for logging...
+    # XXX: Remove static reference and store in template-whonix $DIR
+    #BUILD_LOG=/home/user/qubes/qubes-src/template-whonix/whonix.log
 
-#    # Issues with logger; revert back to no logging for now
-#    warn 'Executing whonix_build script now...'
-#    # XXX: Remove static reference and store in template-whonix $DIR
-#    BUILD_LOG=/home/user/qubes/qubes-src/template-whonix/whonix.log
-#    chroot su user -c "cd ~; ./whonix_build ${BUILD_TYPE} ${DIST}" 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
+    info 'Executing whonix_build script now...'
+    if [ "x${BUILD_LOG}" != "x" ]; then
+        #chroot su user -c "cd ~; ./whonix_build ${BUILD_TYPE} ${DIST}" 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
+        chroot su user -c "cd ~; ./whonix_build ${BUILD_TYPE} ${DIST}" 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
+    else
+        #chroot su user -c "cd ~; ./whonix_build ${BUILD_TYPE} ${DIST}" || { exit 1; }
+        chroot /home/user/whonix_build ${BUILD_TYPE} ${DIST} || { exit 1; }
+    fi
 
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
 fi
