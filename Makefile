@@ -19,8 +19,9 @@
 #
 #
 
-_self := $(strip $(lastword 1,$(subst /, ,$(dir $(lastword $(MAKEFILE_LIST))))))
--include $(BUILDER_DIR)/$(SRC_DIR)/$(_self)/components.conf
+_self_path := $(shell readlink -m $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+_self_name := $(strip $(lastword 1,$(subst /, ,$(_self_path))))
+-include $(_self_path)/components.conf
 
 all:
 	@true
