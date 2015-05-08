@@ -147,7 +147,7 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ] && ! [ -f "${INSTALL
     #### '----------------------------------------------------------------------
     pushd "${WHONIX_DIR}"
     {
-        su $(logname) -c "git submodule update --init --recursive";
+        su $(logname || echo $SUDO_USER) -c "git submodule update --init --recursive";
     }
     popd
 
