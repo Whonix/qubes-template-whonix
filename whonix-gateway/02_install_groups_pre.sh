@@ -106,7 +106,7 @@ EOF
 # ==============================================================================
 # chroot Whonix post build script
 # ==============================================================================
-read -r -d '' WHONIX_BUILD_SCRIPT_POST <<'EOF' || true
+read -r -d '' WHONIX_BUILD_SCRIPT_POST <<EOF || true
 #!/bin/bash -e
 # vim: set ts=4 sw=4 sts=4 et :
 
@@ -171,8 +171,8 @@ mount /dev/shm
 # WHONIX BUILD COMMAND
 # =============================================================================
 pushd /home/user/Whonix
-/home/user/Whonix/whonix_build \
-    --flavor $1 \
+$eatmydata_maybe /home/user/Whonix/whonix_build \
+    --flavor \$1 \
     -- \
     --build \
     --arch amd64 \
