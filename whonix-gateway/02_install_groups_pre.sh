@@ -7,7 +7,13 @@
 # 
 # TODO - TEMP TEST:
 # ------------------------------------------------------------------------------
-# -
+# - Workstaion give `whonixcheck` error and never prompted for setup initially
+#   since disclaimer.done must exist from opening template first..
+#   - see qubes-whonixsetup
+#
+#   (Debugging information: Neither file
+#   /var/cache/whonix-setup-wizard/status-files/whonixsetup.done
+#   /var/cache/whonix-setup-wizard/status-files/whonixsetup.skip
 #
 # TODO - EXPERIMENT:
 # ------------------------------------------------------------------------------
@@ -124,22 +130,25 @@ read -r -d '' WHONIX_BUILD_SCRIPT_POST <<'EOF' || true
 # export whonix_build_apt_newer_release_codename="jessie"
 
 # Whonix11 - help-steps/variables
-# `lsb_release --short -i` is returning 'Whonix', not 'Debain' which causes 
-# error
-export whonix_build_on_operating_system="debian"
+# `lsb_release --short -i` is returning 'Whonix', not 'Debain' which causes error
+# ------------------------------------------------------------------------------
+# Should not be needed in 11.0.0.0.7-developers-only+
+#export whonix_build_on_operating_system="debian"
 
 # ERROR in ././build-steps.d/2300_run-chroot-scripts-post-d detected!
 # run-parts --verbose --exit-on-error "/usr/lib/anon-dist/chroot-scripts-post.d/"
 # /usr/lib/anon-dist/chroot-scripts-post.d//30_backup_grub_cfg
 # cp /boot/grub/grub.cfg /var/lib/anon-dist/grub-backup/grub.cfg.chroot-post1
-
+#
 # ERROR in /usr/lib/anon-dist/chroot-scripts-post.d//85_update_grub detected!
 # /usr/lib/anon-dist/chroot-scripts-post.d//85_update_grub
 # update-grub
-
+#
 # ERROR in /usr/lib/anon-dist/chroot-scripts-post.d//90_fix_grub detected!
 # cp /boot/grub/grub.cfg /var/lib/anon-dist/grub-backup/grub.cfg.chroot-post4
-
+# ------------------------------------------------------------------------------
+whonix_build_script_skip_package_install+=" anon-shared-build-fix-grub "
+export whonix_build_script_skip_package_install
 
 # Disable lintian; cause too many build errors
 # XXX: Will be fixed at some point when lintian error have been fixed for jessie
