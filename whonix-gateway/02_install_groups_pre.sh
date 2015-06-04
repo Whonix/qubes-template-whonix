@@ -5,42 +5,13 @@
 #                           WHONIX 11 - WIP NOTES
 # ==============================================================================
 # 
-# TODO - TEMP TEST:
-# ------------------------------------------------------------------------------
-# - Workstaion give `whonixcheck` error and never prompted for setup initially
-#   since disclaimer.done must exist from opening template first..
-#   - see qubes-whonixsetup
-#
-#   (Debugging information: Neither file
-#   /var/cache/whonix-setup-wizard/status-files/whonixsetup.done
-#   /var/cache/whonix-setup-wizard/status-files/whonixsetup.skip
-#
-# TODO - EXPERIMENT:
-# ------------------------------------------------------------------------------
-# -
-#
 # TODO - FIX:
 # ------------------------------------------------------------------------------
 # - dialog boxes partial display as semi-transparent (wheezy + jessie)
-#   - test to see if that is still case with gnome enable workstation
-#   - possible QT or TrollTech.conf issue?
+#   - test to see if that is still case with gnome enabled workstation [yes]
+#   - possible QT or TrollTech.conf issue? [don't think so]
+#   - seems to be a kde issue; Fedora AppVMs also affected
 #
-# WHONIX RELATED BUGS:
-# ------------------------------------------------------------------------------
-# 1700_install-packages:450 --> "$WHONIX_SOURCE_HELP_STEPS_FOLDER/remove-local-temp-apt-repo"
-# INFO: Setting... export UWT_DEV_PASSTHROUGH="1"
-# INFO: Variable anon_dist_build_version was already set to: 11.0.0.0.1
-# /home/user/Whonix/help-steps/pre: line 20: error_: command not found
-# ...
-# + true 'INFO: Currently running script: /home/user/Whonix/help-steps/unprevent-daemons-from-starting '
-# + true 'INFO: Currently running script: /home/user/Whonix/help-steps/unchroot-raw '
-# + true 'INFO: Skipping script, because ANON_BUILD_INSTALL_TO_ROOT=1: /home/user/Whonix/help-steps/unmount-raw'
-# + true 'INFO: Currently running script: ././build-steps.d/2300_run-chroot-scripts-post-d '
-#
-# REPAIR AFTER SUCCESSFUL BUILDS:
-# ------------------------------------------------------------------------------
-# -
-# 
 # ==============================================================================
 
 source "${SCRIPTSDIR}/vars.sh"
@@ -65,139 +36,106 @@ if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ]; then
     aptInstall ${whonix_build_script_build_dependency}
 
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups"
-    
-    # XXX - TEMP; Overwrite debootstrap snapshot to contain all Whonix updates
-    # If SNAPSHOT=1, Create a snapshot of the already debootstraped image
-    #createSnapshot "debootstrap"
 fi
 
 
 # ==============================================================================
 # chroot Whonix build script
 # ==============================================================================
-read -r -d '' WHONIX_BUILD_SCRIPT <<'EOF' || true
+    #### '----------------------------------------------------------------------
+    info " Setting whonix build type (${TEMPLATE_FLAVOR})"
+    #### '----------------------------------------------------------------------
+    if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ]; then
+        BUILD_TYPE="whonix-gateway"
+    elif [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ]; then
+        BUILD_TYPE="whonix-workstation"
+    else
+        error "Incorrent Whonix type \"${TEMPLATE_FLAVOR}\" selected.  Not building Whonix modules"
+        error "You need to set TEMPLATE_FLAVOR environment variable to either"
+        error "whonix-gateway OR whonix-workstation"
+        exit 1
+    fi
+
+    #### '----------------------------------------------------------------------
+    info ' Setting whonix build options'
+    #### '----------------------------------------------------------------------
+    whonix_build_options=(
+        "--flavor ${BUILD_TYPE}"
+        "--"
+        "--build"
+        "--arch amd64"
+        "--freshness current"
+        "--target qubes"
+        "--kernel linux-image-amd64"
+        "--headers linux-headers-amd64"
+        "--unsafe-io true"
+        "--report minimal"
+        "--verifiable minimal"
+        "--allow-uncommitted true"
+        "--allow-untagged true"
+        "--sanity-tests false"
+    )
+
+    if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
+        whonix_build_options+=("--tb close")
+    fi
+
+    # Some Additional Whonix build options
+    # ====================================
+    #    --target root \
+    #    --unsafe-io true \
+    #    --tb close  # Install tor-browser \
+    #    --allow-uncommitted true \
+    #    --allow-untagged true \
+    #    --testing-frozen-sources  # Jessie; no current sources \
+
+# ==============================================================================
+# chroot Whonix pre build script
+# ==============================================================================
+read -r -d '' WHONIX_BUILD_SCRIPT_PRE <<EOF || true
 ################################################################################
-# This script is executed from chroot most likely as the user `user`
+# This script is executed from chroot most likely as the user 'user'
 # 
 # - The purpose is to do a few pre-fixups that are directly related to whonix
 #   build process
-# - Then, finally, call `whonix_build_post` as sudo with a clean (no) ENV
+# - Then, finally, call 'whonix_build_post' as sudo with a clean (no) ENV
 #
 ################################################################################
 
-
-# ==============================================================================
-# TODO: Confirm if these fixups still apply to Whonix 11
-# ==============================================================================
-
-
+# ------------------------------------------------------------------------------
 # Whonix expects haveged to be started
-# XXX: What to do when init file gone since can not start systed in chroot ENV?
 # ------------------------------------------------------------------------------
 sudo /etc/init.d/haveged start
 
+# ------------------------------------------------------------------------------
 # Use sudo with clean ENV to build Whonix; any ENV options will be set there
 # ------------------------------------------------------------------------------
-#sudo ~/whonix_build_post $@
-#sudo ~/whonix_build_post $@ 2>/dev/null
-sudo ~/whonix_build_post $@
+sudo /home/user/whonix_build ${whonix_build_options[@]}
 EOF
 
 # ==============================================================================
-# chroot Whonix post build script
+# chroot Whonix build script
 # ==============================================================================
-read -r -d '' WHONIX_BUILD_SCRIPT_POST <<EOF || true
+read -r -d '' WHONIX_BUILD_SCRIPT <<'EOF' || true
 #!/bin/bash -e
 # vim: set ts=4 sw=4 sts=4 et :
 
-
-# =============================================================================
-# `TO KEEP` COMMENTED OUT CONFIGURATIONS
-# =============================================================================
-# Make sure we clear Qubes overrides of these vars
-# - These will be kept for future reference in case module is re-factored
-#   differently and would be required if ENV was passed via sudo
-#export GENMKFILE_INCLUDE_FILE_MAIN=
-#export GENMKFILE_BOOTSTRAP=
-
-
-# =============================================================================
-# `TO REMOVE` CONFIGURATIONS + HACK THAT WILL MOST LIKELY BE REMOVED
-# =============================================================================
-# Whonix 11 Hacks (stretch does not exist)
-# XXX: Should be fixed in next tag release
 # ------------------------------------------------------------------------------
-# export whonix_build_apt_newer_release_codename="jessie"
-
-# Whonix11 - help-steps/variables
-# `lsb_release --short -i` is returning 'Whonix', not 'Debain' which causes error
-# ------------------------------------------------------------------------------
-# Should not be needed in 11.0.0.0.7-developers-only+
-#export whonix_build_on_operating_system="debian"
-
-# ERROR in ././build-steps.d/2300_run-chroot-scripts-post-d detected!
-# run-parts --verbose --exit-on-error "/usr/lib/anon-dist/chroot-scripts-post.d/"
-# /usr/lib/anon-dist/chroot-scripts-post.d//30_backup_grub_cfg
-# cp /boot/grub/grub.cfg /var/lib/anon-dist/grub-backup/grub.cfg.chroot-post1
-#
-# ERROR in /usr/lib/anon-dist/chroot-scripts-post.d//85_update_grub detected!
-# /usr/lib/anon-dist/chroot-scripts-post.d//85_update_grub
-# update-grub
-#
-# ERROR in /usr/lib/anon-dist/chroot-scripts-post.d//90_fix_grub detected!
-# cp /boot/grub/grub.cfg /var/lib/anon-dist/grub-backup/grub.cfg.chroot-post4
-# ------------------------------------------------------------------------------
-whonix_build_script_skip_package_install+=" anon-shared-build-fix-grub "
-export whonix_build_script_skip_package_install
-
-# Disable lintian; cause too many build errors
-# XXX: Will be fixed at some point when lintian error have been fixed for jessie
-# ------------------------------------------------------------------------------
-# `sed` only needed till next tag release
-#sudo sed -i "s/make_use_lintian=\"true\"/make_use_lintian=\"false\"/g" "/home/user/Whonix/build-steps.d/1200_create-debian-packages"
-export make_use_lintian="false"
-
-
-# =============================================================================
-# `REQUIRED` CONFIGURATIONS
-# =============================================================================
 # Prevents Whonix makefile use of shared memory 'sem_open: Permission denied'
 # ------------------------------------------------------------------------------
 echo tmpfs /dev/shm tmpfs defaults 0 0 >> /etc/fstab
 mount /dev/shm
 
-
 # =============================================================================
 # WHONIX BUILD COMMAND
 # =============================================================================
+#$eatmydata_maybe /home/user/Whonix/whonix_build 
+
 pushd /home/user/Whonix
-$eatmydata_maybe /home/user/Whonix/whonix_build \
-    --flavor \$1 \
-    -- \
-    --build \
-    --arch amd64 \
-    --freshness current \
-    --target root \
-    --report minimal \
-    --verifiable minimal \
-    --allow-uncommitted true \
-    --allow-untagged true \
-    --sanity-tests false || { exit 1; }
+    env LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
+        /home/user/Whonix/whonix_build $@ || { exit 1; }
 popd
 EOF
-
-
-# Whonix11 removed for now...
-# ====================================
-#    --kernel linux-image-amd64 \
-#    --headers linux-headers-amd64 \
-#
-# Some Additional Whonix build options
-# ====================================
-#    --tb close  # Install tor-browser \
-#    --allow-uncommitted true \
-#    --allow-untagged true \
-#    --testing-frozen-sources  # Jessie; no current sources \
 
 
 ##### '-------------------------------------------------------------------------
@@ -230,15 +168,6 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ] && ! [ -f "${INSTALL
     }
 
     #### '----------------------------------------------------------------------
-    info ' Installing Whonix build scripts'
-    #### '----------------------------------------------------------------------
-    echo "${WHONIX_BUILD_SCRIPT_POST}" > "${INSTALLDIR}/home/user/whonix_build_post"
-    chmod 0755 "${INSTALLDIR}/home/user/whonix_build_post"
-
-    echo "${WHONIX_BUILD_SCRIPT}" > "${INSTALLDIR}/home/user/whonix_build"
-    chmod 0755 "${INSTALLDIR}/home/user/whonix_build"
-
-    #### '----------------------------------------------------------------------
     info ' Removing apt-listchanges if it exists,so no prompts appear'
     #### '----------------------------------------------------------------------
     #      Whonix does not handle this properly, but aptInstall packages will
@@ -267,39 +196,42 @@ fi
 debug ' Installing Whonix code base'
 ##### '-------------------------------------------------------------------------
 if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ]; then
+
+    #### '----------------------------------------------------------------------
+    info ' Create Whonix directory (/home/user/Whonix)'
+    #### '----------------------------------------------------------------------
     if ! [ -d "${INSTALLDIR}/home/user/Whonix" ]; then
-        chroot su user -c 'mkdir /home/user/Whonix'
+        chroot su user -c 'mkdir -p /home/user/Whonix'
     fi
 
-    # XXX: TODO: Need to get from ENV $WHONIX_DIR as we can't always be sure where dir is
-    mount --bind "../Whonix" "${INSTALLDIR}/home/user/Whonix"
+    #### '----------------------------------------------------------------------
+    info " Bind Whonix source directory (${BUILDER_DIR}/${SRC_DIR}/Whonix)"
+    #### '----------------------------------------------------------------------
+    mount --bind "${BUILDER_DIR}/${SRC_DIR}/Whonix" "${INSTALLDIR}/home/user/Whonix"
 
-    if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ]; then
-        BUILD_TYPE="whonix-gateway"
-    elif [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ]; then
-        BUILD_TYPE="whonix-workstation"
-    else
-        error "Incorrent Whonix type \"${TEMPLATE_FLAVOR}\" selected.  Not building Whonix modules"
-        error "You need to set TEMPLATE_FLAVOR environment variable to either"
-        error "whonix-gateway OR whonix-workstation"
-        exit 1
-    fi
+    #### '----------------------------------------------------------------------
+    info ' Installing Whonix build scripts'
+    #### '----------------------------------------------------------------------
+    echo "${WHONIX_BUILD_SCRIPT_PRE}" > "${INSTALLDIR}/home/user/whonix_build_pre"
+    chmod 0755 "${INSTALLDIR}/home/user/whonix_build_pre"
+    cat "${INSTALLDIR}/home/user/whonix_build_pre"
 
-    # Whonix needs /dev/pts mounted during build
+    echo "${WHONIX_BUILD_SCRIPT}" > "${INSTALLDIR}/home/user/whonix_build"
+    chmod 0755 "${INSTALLDIR}/home/user/whonix_build"
+
+    #### '----------------------------------------------------------------------
+    info ' Bind /dev/pts for build'
+    #### '----------------------------------------------------------------------
     mount --bind /dev "${INSTALLDIR}/dev"
     mount --bind /dev/pts "${INSTALLDIR}/dev/pts"
 
-    # Enable for logging...
-    # XXX: Remove static reference and store in template-whonix $DIR
-    #BUILD_LOG=/home/user/qubes/qubes-src/template-whonix/whonix.log
-
+    #### '----------------------------------------------------------------------
     info 'Executing whonix_build script now...'
+    #### '----------------------------------------------------------------------
     if [ "x${BUILD_LOG}" != "x" ]; then
-        #chroot su user -c "cd ~; ./whonix_build ${BUILD_TYPE} ${DIST}" 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
-        chroot su user -c "cd ~; ./whonix_build ${BUILD_TYPE} ${DIST}" 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
+        chroot su user -c "/home/user/whonix_build_pre" 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
     else
-        #chroot su user -c "cd ~; ./whonix_build ${BUILD_TYPE} ${DIST}" || { exit 1; }
-        chroot /home/user/whonix_build ${BUILD_TYPE} ${DIST} || { exit 1; }
+        chroot su user -c "/home/user/whonix_build_pre" || { exit 1; }
     fi
 
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
@@ -355,6 +287,13 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/$
     if [ -n "`chroot id -u user-placeholder`" ]; then
         chroot userdel user-placeholder
         chroot usermod -u 1000 user
+    fi
+
+    #### '----------------------------------------------------------------------
+    info 'Maybe Enable Tor'
+    #### '----------------------------------------------------------------------
+    if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
+        sed -i "s/^#DisableNetwork/DisableNetwork/g" "${INSTALLDIR}/etc/tor/torrc"
     fi
 
     #### '----------------------------------------------------------------------
