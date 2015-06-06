@@ -154,6 +154,12 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ] && ! [ -f "${INSTALL
     popd
 
     #### '----------------------------------------------------------------------
+    info ' Add items to /etc/skel'
+    #### '----------------------------------------------------------------------
+    mkdir -p "${INSTALLDIR}/etc/skel/bin"
+    mkdir -p "${INSTALLDIR}/etc/skel/opt"
+
+    #### '----------------------------------------------------------------------
     info ' Adding a user account for Whonix to build with'
     #### '----------------------------------------------------------------------
     chroot id -u 'user' >/dev/null 2>&1 || \
