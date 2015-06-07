@@ -3,4 +3,4 @@
 ## See the file COPYING for copying conditions.
 
 # Install Tor browser to /home/user/opt by default.
-tb_home_folder=~/opt
+tb_home_folder=/home/user/opt
