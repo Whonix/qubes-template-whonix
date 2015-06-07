@@ -1,19 +1,6 @@
 #!/bin/bash -e
 # vim: set ts=4 sw=4 sts=4 et :
 
-# ==============================================================================
-#                           WHONIX 11 - WIP NOTES
-# ==============================================================================
-# 
-# TODO - FIX:
-# ------------------------------------------------------------------------------
-# - dialog boxes partial display as semi-transparent (wheezy + jessie)
-#   - test to see if that is still case with gnome enabled workstation [yes]
-#   - possible QT or TrollTech.conf issue? [don't think so]
-#   - seems to be a kde issue; Fedora AppVMs also affected
-#
-# ==============================================================================
-
 source "${SCRIPTSDIR}/vars.sh"
 source "${SCRIPTSDIR}/distribution.sh"
 
@@ -38,56 +25,29 @@ if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ]; then
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups"
 fi
 
+#### '----------------------------------------------------------------------
+info ' Setting whonix build options'
+#### '----------------------------------------------------------------------
+whonix_build_options=(
+    "--flavor ${TEMPLATE_FLAVOR}"
+    "--"
+    "--build"
+    "--arch amd64"
+    "--freshness current"
+    "--target qubes"
+    "--kernel linux-image-amd64"
+    "--headers linux-headers-amd64"
+    "--unsafe-io true"
+    "--report minimal"
+    "--verifiable minimal"
+    "--allow-uncommitted true"
+    "--allow-untagged true"
+    "--sanity-tests false"
+)
 
-# ==============================================================================
-# chroot Whonix build script
-# ==============================================================================
-    #### '----------------------------------------------------------------------
-    info " Setting whonix build type (${TEMPLATE_FLAVOR})"
-    #### '----------------------------------------------------------------------
-    if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ]; then
-        BUILD_TYPE="whonix-gateway"
-    elif [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ]; then
-        BUILD_TYPE="whonix-workstation"
-    else
-        error "Incorrent Whonix type \"${TEMPLATE_FLAVOR}\" selected.  Not building Whonix modules"
-        error "You need to set TEMPLATE_FLAVOR environment variable to either"
-        error "whonix-gateway OR whonix-workstation"
-        exit 1
-    fi
-
-    #### '----------------------------------------------------------------------
-    info ' Setting whonix build options'
-    #### '----------------------------------------------------------------------
-    whonix_build_options=(
-        "--flavor ${BUILD_TYPE}"
-        "--"
-        "--build"
-        "--arch amd64"
-        "--freshness current"
-        "--target qubes"
-        "--kernel linux-image-amd64"
-        "--headers linux-headers-amd64"
-        "--unsafe-io true"
-        "--report minimal"
-        "--verifiable minimal"
-        "--allow-uncommitted true"
-        "--allow-untagged true"
-        "--sanity-tests false"
-    )
-
-    if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
-        whonix_build_options+=("--tb close")
-    fi
-
-    # Some Additional Whonix build options
-    # ====================================
-    #    --target root \
-    #    --unsafe-io true \
-    #    --tb close  # Install tor-browser \
-    #    --allow-uncommitted true \
-    #    --allow-untagged true \
-    #    --testing-frozen-sources  # Jessie; no current sources \
+if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
+    whonix_build_options+=("--tb closed")
+fi
 
 # ==============================================================================
 # chroot Whonix pre build script
