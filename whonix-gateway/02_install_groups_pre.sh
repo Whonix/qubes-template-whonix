@@ -49,18 +49,13 @@ if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" 
     whonix_build_options+=("--tb closed")
 fi
 
+
 # ==============================================================================
-# chroot Whonix pre build script
+# chroot Whonix build script
 # ==============================================================================
-read -r -d '' WHONIX_BUILD_SCRIPT_PRE <<EOF || true
-################################################################################
-# This script is executed from chroot most likely as the user 'user'
-# 
-# - The purpose is to do a few pre-fixups that are directly related to whonix
-#   build process
-# - Then, finally, call 'whonix_build_post' as sudo with a clean (no) ENV
-#
-################################################################################
+read -r -d '' WHONIX_BUILD_SCRIPT <<EOF || true
+#!/bin/bash -e
+# vim: set ts=4 sw=4 sts=4 et :
 
 # ------------------------------------------------------------------------------
 # Whonix expects haveged to be started
@@ -68,35 +63,20 @@ read -r -d '' WHONIX_BUILD_SCRIPT_PRE <<EOF || true
 sudo /etc/init.d/haveged start
 
 # ------------------------------------------------------------------------------
-# Use sudo with clean ENV to build Whonix; any ENV options will be set there
-# ------------------------------------------------------------------------------
-sudo /home/user/whonix_build ${whonix_build_options[@]}
-EOF
-
-# ==============================================================================
-# chroot Whonix build script
-# ==============================================================================
-read -r -d '' WHONIX_BUILD_SCRIPT <<'EOF' || true
-#!/bin/bash -e
-# vim: set ts=4 sw=4 sts=4 et :
-
-# ------------------------------------------------------------------------------
 # Prevents Whonix makefile use of shared memory 'sem_open: Permission denied'
 # ------------------------------------------------------------------------------
-echo tmpfs /dev/shm tmpfs defaults 0 0 >> /etc/fstab
-mount /dev/shm
+sudo mount -t tmpfs tmpfs /dev/shm
 
 # =============================================================================
 # WHONIX BUILD COMMAND
 # =============================================================================
 #$eatmydata_maybe /home/user/Whonix/whonix_build 
 
-pushd /home/user/Whonix
+pushd ~/Whonix
     env LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
-        /home/user/Whonix/whonix_build $@ || { exit 1; }
+        sudo -E ~/Whonix/whonix_build ${whonix_build_options[@]} || { exit 1; }
 popd
 EOF
-
 
 ##### '-------------------------------------------------------------------------
 debug ' Preparing Whonix for installation'
@@ -154,6 +134,18 @@ EOF
     #### '----------------------------------------------------------------------
     copyTree "files"
 
+    # Install Tor browser to /home/user by default. (build-step only)
+    #
+    # Set tor-browser installation directory.  This can't really be put in 
+    # 'qubes-whonix' postinit since the value is not static if a custom 
+    # directory location is chosen.
+    if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
+        if [ -n "${WHONIX_INSTALL_TB_DIRECTORY}" ]; then
+            mkdir -p "${INSTALLDIR}/etc/torbrowser.d"
+            echo "tb_home_folder=${WHONIX_INSTALL_TB_DIRECTORY}" > "${INSTALLDIR}/etc/torbrowser.d/40_whonix_build"
+        fi
+    fi
+
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared"
 fi
 
@@ -195,9 +187,9 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${
     info 'Executing whonix_build script now...'
     #### '----------------------------------------------------------------------
     if [ "x${BUILD_LOG}" != "x" ]; then
-        chroot su user -c "/home/user/whonix_build_pre" 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
+        chroot sudo -u user /home/user/whonix_build 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
     else
-        chroot su user -c "/home/user/whonix_build_pre" || { exit 1; }
+        chroot sudo -u user /home/user/whonix_build || { exit 1; }
     fi
 
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
