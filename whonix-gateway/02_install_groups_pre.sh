@@ -273,7 +273,8 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/$
         chroot apt-get.anondist-orig -y --force-yes remove --purge apt-cacher-ng
 
     #### '----------------------------------------------------------------------
-    info ' Remove original sources.list (Whonix copied them to .../debian.list)'
+    info ' Remove original sources.list (Whonix package anon-apt-sources-list \
+ships /etc/apt/sources.list.d/debian.list)'
     #### '----------------------------------------------------------------------
     rm -f "${INSTALLDIR}/etc/apt/sources.list"
 
