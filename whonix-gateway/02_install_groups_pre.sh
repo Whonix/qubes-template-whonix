@@ -1,6 +1,10 @@
 #!/bin/bash -e
 # vim: set ts=4 sw=4 sts=4 et :
 
+if [ "${VERBOSE}" -ge 2 -o "${DEBUG}" == "1" ]; then
+    set -x
+fi
+
 source "${SCRIPTSDIR}/vars.sh"
 source "${SCRIPTSDIR}/distribution.sh"
 
@@ -70,7 +74,7 @@ sudo mount -t tmpfs tmpfs /dev/shm
 # =============================================================================
 # WHONIX BUILD COMMAND
 # =============================================================================
-#$eatmydata_maybe /home/user/Whonix/whonix_build 
+#$eatmydata_maybe /home/user/Whonix/whonix_build
 
 pushd ~/Whonix
     env LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
@@ -136,8 +140,8 @@ EOF
 
     # Install Tor browser to /home/user by default. (build-step only)
     #
-    # Set tor-browser installation directory.  This can't really be put in 
-    # 'qubes-whonix' postinit since the value is not static if a custom 
+    # Set tor-browser installation directory.  This can't really be put in
+    # 'qubes-whonix' postinit since the value is not static if a custom
     # directory location is chosen.
     if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
         if [ -n "${WHONIX_INSTALL_TB_DIRECTORY}" ]; then
@@ -288,7 +292,7 @@ fi
 ##### '-------------------------------------------------------------------------
 debug ' Temporarily restore original apt-get for remainder of install process'
 ##### '-------------------------------------------------------------------------
-pushd "${INSTALLDIR}/usr/bin" 
+pushd "${INSTALLDIR}/usr/bin"
 {
     rm -f apt-get;
     cp -p apt-get.anondist-orig apt-get;
