@@ -5,6 +5,8 @@ if [ "$VERBOSE" -ge 2 -o "$DEBUG" == "1" ]; then
     set -x
 fi
 
+set -o pipefail
+
 source "${SCRIPTSDIR}/vars.sh"
 source "${SCRIPTSDIR}/distribution.sh"
 
