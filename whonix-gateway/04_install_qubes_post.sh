@@ -8,10 +8,6 @@ fi
 source "${SCRIPTSDIR}/vars.sh"
 source "${SCRIPTSDIR}/distribution.sh"
 
-##### '-------------------------------------------------------------------------
-debug ' Installing qubes-whonix package(s)'
-##### '-------------------------------------------------------------------------
-
 
 # If .prepared_debootstrap has not been completed, don't continue
 exitOnNoFile "${INSTALLDIR}/${TMPDIR}/.prepared_qubes" "prepared_qubes installataion has not completed!... Exiting"
@@ -27,14 +23,10 @@ trap cleanup ERR
 trap cleanup EXIT
 
 #### '--------------------------------------------------------------------------
-info ' Installing qubes-whonix and other required packages'
+info ' whonix-setup-wizard misc'
 #### '--------------------------------------------------------------------------
 # whonix-setup-wizard expects '/usr/local/share/applications' directory to exist
 chroot mkdir -p '/usr/local/share/applications'  # whonix-setup-wizard needs this
-
-installQubesRepo
-aptInstall qubes-whonix
-uninstallQubesRepo
 
 #### '----------------------------------------------------------------------
 info ' Re-update locales'
