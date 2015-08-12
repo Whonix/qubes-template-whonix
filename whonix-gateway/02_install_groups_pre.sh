@@ -64,11 +64,6 @@ read -r -d '' WHONIX_BUILD_SCRIPT <<EOF || true
 # vim: set ts=4 sw=4 sts=4 et :
 
 # ------------------------------------------------------------------------------
-# Whonix expects haveged to be started
-# ------------------------------------------------------------------------------
-sudo /etc/init.d/haveged start
-
-# ------------------------------------------------------------------------------
 # Prevents Whonix makefile use of shared memory 'sem_open: Permission denied'
 # ------------------------------------------------------------------------------
 sudo mount -t tmpfs tmpfs /dev/shm
