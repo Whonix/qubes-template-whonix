@@ -260,14 +260,6 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/$
     sed -i "s/alias l='ls -CF'/alias l='ls -l'/g" "${INSTALLDIR}/home/user/.bashrc"
 
     #### '----------------------------------------------------------------------
-    info ' Remove apt-cacher-ng'
-    #### '----------------------------------------------------------------------
-    chroot service apt-cacher-ng stop || :
-    chroot update-rc.d apt-cacher-ng disable || :
-    DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
-        chroot apt-get.anondist-orig -y --force-yes remove --purge apt-cacher-ng
-
-    #### '----------------------------------------------------------------------
     info ' Remove original sources.list (Whonix package anon-apt-sources-list \
 ships /etc/apt/sources.list.d/debian.list)'
     #### '----------------------------------------------------------------------
