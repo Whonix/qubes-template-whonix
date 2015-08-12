@@ -134,7 +134,7 @@ EOF
     # Install Tor browser to /home/user by default. (build-step only)
     #
     # Set tor-browser installation directory.  This can't really be put in
-    # 'qubes-whonix' postinit since the value is not static if a custom
+    # 'qubes-whonix' postinst since the value is not static if a custom
     # directory location is chosen.
     if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
         if [ -n "${WHONIX_INSTALL_TB_DIRECTORY}" ]; then
