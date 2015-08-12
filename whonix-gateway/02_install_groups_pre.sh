@@ -74,8 +74,10 @@ sudo mount -t tmpfs tmpfs /dev/shm
 #$eatmydata_maybe /home/user/Whonix/whonix_build
 
 pushd ~/Whonix
-    env LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
-        sudo -E ~/Whonix/whonix_build ${whonix_build_options[@]} || { exit 1; }
+
+env LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
+     sudo -E ~/Whonix/whonix_build ${whonix_build_options[@]} || { exit 1; }
+
 popd
 EOF
 
