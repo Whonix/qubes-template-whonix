@@ -120,12 +120,6 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ] && ! [ -f "${INSTALL
     }
 
     #### '----------------------------------------------------------------------
-    info ' Removing apt-listchanges if it exists,so no prompts appear'
-    #### '----------------------------------------------------------------------
-    #      Whonix does not handle this properly, but aptInstall packages will
-    aptRemove apt-listchanges || true
-
-    #### '----------------------------------------------------------------------
     debug 'XXX: Whonix10/11 HACK'
     #### '----------------------------------------------------------------------
     rm -f "${INSTALLDIR}/etc/network/interfaces"
