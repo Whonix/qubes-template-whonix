@@ -22,12 +22,6 @@ info ' Trap ERR and EXIT signals and cleanup (umount)'
 trap cleanup ERR
 trap cleanup EXIT
 
-#### '--------------------------------------------------------------------------
-info ' whonix-setup-wizard misc'
-#### '--------------------------------------------------------------------------
-# whonix-setup-wizard expects '/usr/local/share/applications' directory to exist
-chroot mkdir -p '/usr/local/share/applications'  # whonix-setup-wizard needs this
-
 #### '----------------------------------------------------------------------
 info ' Re-update locales'
 ####   (Locales get reset during package installation sometimes)
