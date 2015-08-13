@@ -135,6 +135,10 @@ EOF
         fi
     fi
 
+    ## Install Qubes' repository so dependencies of the qubes-whonix package
+    ## that gets installed by Whonix's build script will be available.
+    installQubesRepo
+
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared"
 fi
 
@@ -189,6 +193,7 @@ fi
 debug ' Whonix Post Installation Configurations'
 ##### '-------------------------------------------------------------------------
 if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_post" ]; then
+    uninstallQubesRepo
 
     #### '----------------------------------------------------------------------
     info ' Restoring original network interfaces'
