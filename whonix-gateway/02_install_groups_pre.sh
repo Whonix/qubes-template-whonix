@@ -216,7 +216,7 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/$
     popd
 
     #### '----------------------------------------------------------------------
-    info ' Temporarily retore original hosts for remainder of install process'
+    info ' Temporarily restore original hosts for remainder of install process'
     info ' (Will be restored on initial boot)'
     #### '----------------------------------------------------------------------
     pushd "${INSTALLDIR}/etc"
