@@ -244,16 +244,6 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/$
     fi
 
     #### '----------------------------------------------------------------------
-    info ' Enable some aliases in .bashrc'
-    #### '----------------------------------------------------------------------
-    sed -i "s/^# export/export/g" "${INSTALLDIR}/root/.bashrc"
-    sed -i "s/^# eval/eval/g" "${INSTALLDIR}/root/.bashrc"
-    sed -i "s/^# alias/alias/g" "${INSTALLDIR}/root/.bashrc"
-    sed -i "s/^#force_color_prompt/force_color_prompt/g" "${INSTALLDIR}/home/user/.bashrc"
-    sed -i "s/#alias/alias/g" "${INSTALLDIR}/home/user/.bashrc"
-    sed -i "s/alias l='ls -CF'/alias l='ls -l'/g" "${INSTALLDIR}/home/user/.bashrc"
-
-    #### '----------------------------------------------------------------------
     info ' Remove original sources.list (Whonix package anon-apt-sources-list \
 ships /etc/apt/sources.list.d/debian.list)'
     #### '----------------------------------------------------------------------
