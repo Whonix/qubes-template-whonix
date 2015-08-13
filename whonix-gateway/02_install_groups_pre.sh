@@ -122,10 +122,6 @@ EOF
         fi
     fi
 
-    ## Install Qubes' repository so dependencies of the qubes-whonix package
-    ## that gets installed by Whonix's build script will be available.
-    installQubesRepo
-
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared"
 fi
 
@@ -134,6 +130,10 @@ fi
 debug ' Installing Whonix code base'
 ##### '-------------------------------------------------------------------------
 if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ]; then
+    ## Install Qubes' repository so dependencies of the qubes-whonix package
+    ## that gets installed by Whonix's build script will be available.
+    ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
+    installQubesRepo
 
     #### '----------------------------------------------------------------------
     info ' Create Whonix directory (/home/user/Whonix)'
