@@ -75,8 +75,10 @@ sudo mount -t tmpfs tmpfs /dev/shm
 
 pushd ~/Whonix
 
-env LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
-     sudo -E ~/Whonix/whonix_build ${whonix_build_options[@]} || { exit 1; }
+env \
+   LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
+   REPO_PROXY=${REPO_PROXY} \
+      sudo -E ~/Whonix/whonix_build ${whonix_build_options[@]} || { exit 1; }
 
 popd
 EOF
