@@ -79,6 +79,8 @@ debug ' Preparing Whonix for installation'
 if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
     info "Preparing Whonix system"
 
+    aptInstall sudo
+
     #### '----------------------------------------------------------------------
     info ' Initializing Whonix submodules'
     #### '----------------------------------------------------------------------
