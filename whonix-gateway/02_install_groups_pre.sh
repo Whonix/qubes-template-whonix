@@ -21,16 +21,6 @@ info ' Trap ERR and EXIT signals and cleanup (umount)'
 trap cleanup ERR
 trap cleanup EXIT
 
-if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ]; then
-    #### '----------------------------------------------------------------------
-    info ' Installing extra packages from Whonix 30_dependencies'
-    #### '----------------------------------------------------------------------
-    source "${WHONIX_DIR}/buildconfig.d/30_dependencies"
-    aptInstall ${whonix_build_script_build_dependency}
-
-    touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups"
-fi
-
 #### '----------------------------------------------------------------------
 info ' Setting whonix build options'
 #### '----------------------------------------------------------------------
@@ -86,7 +76,7 @@ EOF
 ##### '-------------------------------------------------------------------------
 debug ' Preparing Whonix for installation'
 ##### '-------------------------------------------------------------------------
-if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared_groups" ] && ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
+if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
     info "Preparing Whonix system"
 
     #### '----------------------------------------------------------------------
