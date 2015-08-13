@@ -82,15 +82,6 @@ if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
     aptInstall sudo
 
     #### '----------------------------------------------------------------------
-    info ' Initializing Whonix submodules'
-    #### '----------------------------------------------------------------------
-    pushd "${WHONIX_DIR}"
-    {
-        su $(logname || echo $SUDO_USER) -c "git submodule update --init --recursive";
-    }
-    popd
-
-    #### '----------------------------------------------------------------------
     info ' Add items to /etc/skel'
     #### '----------------------------------------------------------------------
     mkdir -p "${INSTALLDIR}/etc/skel/bin"
