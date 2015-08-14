@@ -5,8 +5,6 @@ if [ "$VERBOSE" -ge 2 -o "$DEBUG" == "1" ]; then
     set -x
 fi
 
-set -o pipefail
-
 source "${SCRIPTSDIR}/vars.sh"
 source "${SCRIPTSDIR}/distribution.sh"
 
@@ -171,7 +169,10 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${
     info 'Executing whonix_build script now...'
     #### '----------------------------------------------------------------------
     if [ "x${BUILD_LOG}" != "x" ]; then
+        set -o pipefail
         chroot sudo -u user /home/user/whonix_build 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
+        ## Deactivate pipefail. (Other Qubes scripts such as umount_kill are not compatible with it.)
+        set +o pipefail
     else
         chroot sudo -u user /home/user/whonix_build || { exit 1; }
     fi
