@@ -5,7 +5,7 @@
 #                  Build Whonix Gateway and Workstation
 # ==============================================================================
 # Follow the steps within this README to create a Whonix based template
-# or just execute this README to create the defaults as shown in the 
+# or just execute this README to create the defaults as shown in the
 # examples.
 #
 # This README will show 3 different methods to build the templates:
@@ -18,7 +18,7 @@
 #   - Offers to custom configuration options
 #
 # METHOD 2: Using 'setup'
-#    - Detailed instructions are included to use 'setup' program to 
+#    - Detailed instructions are included to use 'setup' program to
 #      assist in creating a custom builder configuration file.  It
 #      may be worthwhile to also read the 'example-configs/templates.conf'
 #      configuration within the `qubes-builder` directory as it is the
@@ -30,20 +30,20 @@
 #                  FIRST TIME INSTALLATION NOTES
 # ==============================================================================
 # Although the `setup` program will do this for you, it is still highly
-# recommended that before building for the first time, you follow the 
+# recommended that before building for the first time, you follow the
 # instructions for setting up the Qubes master keys manually:
 #   https://qubes-os.org/wiki/QubesBuilder
 #
 #
-# Import the Qubes master key 
-gpg --keyserver pgp.mit.edu --recv-keys 0x36879494 
+# Import the Qubes master key
+gpg --keyserver pgp.mit.edu --recv-keys 0x36879494
 gpg --keyserver pgp.mit.edu --recv-keys 0x36879494 
 #
-# Verify its fingerprint, set as 'trusted'. 
-# This is described here: 
-# https://wiki.qubes-os.org/trac/wiki/VerifyingSignatures 
-wget http://keys.qubes-os.org/keys/qubes-developers-keys.asc 
-gpg --import qubes-developers-keys.asc 
+# Verify its fingerprint, set as 'trusted'.
+# This is described here:
+# https://wiki.qubes-os.org/trac/wiki/VerifyingSignatures
+wget http://keys.qubes-os.org/keys/qubes-developers-keys.asc
+gpg --import qubes-developers-keys.asc
 #
 # #############################################################################
 #                   METHOD 2:  BUILD TEMPLATES USING SETUP
@@ -59,8 +59,8 @@ gpg --import qubes-developers-keys.asc
 #   Press 'Y' to download 'dialog` package
 #
 # Install Keys For:
-# ----------------- 
-#   'Marek Marczykowski-Górecki' (lead developer) and 
+# -----------------
+#   'Marek Marczykowski-Górecki' (lead developer) and
 #   'Qubes Master Signing Key'
 #     You will only be prompted to install keys if you have not already
 #     installed them manually. It is a good idea to install them manually
@@ -79,7 +79,7 @@ gpg --import qubes-developers-keys.asc
 # -----------------
 #   This dialog will only be displayed if you have an override.conf
 #   file and is used to change the git prefix to allow write access
-#   to the repo if you already have write permission.  Useful for 
+#   to the repo if you already have write permission.  Useful for
 #   developers that have a complete mirror.  Normally you would select
 #   `No`.
 #
@@ -91,7 +91,7 @@ gpg --import qubes-developers-keys.asc
 # -------------------------------
 #   You will not see any `Whonix` options in select DIST_VMS dialog yet
 #   since the package has not yet been downloaded; just choose 'OK' for now
-# 
+#
 # Builder Plugins Selection
 # -------------------------
 #   You need to make sure both 'builder-debian' and 'template-whonix' are
@@ -114,7 +114,7 @@ gpg --import qubes-developers-keys.asc
 #                    STEP 3 - CHOOSE WHONIX VERSION TO BUILD
 # =============================================================================
 # Run ./setup again.  Just keep pressing 'ENTER' until you get back to the
-# 'Template Distribution Selection'. (Setup will remember your previous 
+# 'Template Distribution Selection'. (Setup will remember your previous
 # settings)
 #   Now choose any templates you wish to build and choose 'OK'
 #   Just choose 'OK' on 'Builder Plugins Selection' again as well
@@ -137,17 +137,17 @@ gpg --import qubes-developers-keys.asc
 #
 # Follow the instructions at the END of this file to assist in installing the
 # template in dom0
-# 
+#
 # #############################################################################
 #                   METHOD 3:  BUILD TEMPLATES MANUALLY
 # #############################################################################
 #
 # Builder configuration file is located in ./example-configs/whonix.conf
-# 
+#
 # Build Steps
 # -----------
 # Copy, then edit builder.conf to customize
-# The default configuration is set only to build 'whonix-gateway' so you 
+# The default configuration is set only to build 'whonix-gateway' so you
 # would need to edit the file and uncomment out 'whonix-workstation' if you
 # also want to build it.
 #   cp example-configs/whonix.conf builder.conf
@@ -201,11 +201,11 @@ make template || exit 1
 # - Once build is complete the template rpm can be found in in
 #   '~/qubes-builder/qubes-src/linux-template-builder/rpm/noarch'
 #
-# On dom0: 
+# On dom0:
 # ========
-# - A script has been created in 'qubes-src/linux-template-builder/rpm/install-templates.sh' 
-#   that can help transfer the template images over for installation.  Use the 
-#   following command in dom0 to get the script, then once the script has been 
+# - A script has been created in 'qubes-src/linux-template-builder/rpm/install-templates.sh'
+#   that can help transfer the template images over for installation.  Use the
+#   following command in dom0 to get the script, then once the script has been
 #   downloaded to dom0 change the permissions of the file so it can be executed
 #   (chmod a+x install-template.sh); then edit or run the file.  It will download,
 #   remove old template and install new one.
