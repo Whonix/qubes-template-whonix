@@ -1,6 +1,5 @@
-gnome-terminal.desktop
+konsole.desktop
 nautilus.desktop
-yelp.desktop
 gateway-arm.desktop
 gateway-reloadfirewall.desktop
 gateway-reloadtor.desktop

@@ -1,9 +1,8 @@
-gnome-terminal.desktop
+konsole.desktop
 gpk-application.desktop
 gpk-update-viewer.desktop
 gpk-prefs.desktop
 gpk-log.desktop
-yelp.desktop
 gateway-firewall30default.desktop
 gateway-firewall50user.desktop
 gateway-torrc.desktop
