@@ -39,6 +39,8 @@ whonix_build_options=(
     "--sanity-tests false"
 )
 
+whonix_build_options+="--whonix-repo '$WHONIX_APT_REPOSITORY_OPTS'"
+
 if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
     whonix_build_options+=("--tb closed")
 fi
