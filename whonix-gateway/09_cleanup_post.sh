@@ -12,6 +12,15 @@ source "${SCRIPTSDIR}/distribution.sh"
 debug ' Whonix post installation cleanup'
 ##### '-------------------------------------------------------------------------
 
+## Can be removed when https://github.com/marmarek/qubes-builder-debian/pull/18 was merged.
+aptRemove chrony
+
+## Workaround. ntpdate needs to be removed here, because it can not be removed from
+## template_debian/packages_qubes.list, because that would break minimal Debian templates.
+## https://github.com/QubesOS/qubes-issues/issues/1102
+aptRemove ntpdate
+DEBIAN_FRONTEND="noninteractive" DEBIAN_PRIORITY="critical" DEBCONF_NOWARNINGS="yes" \
+        chroot $eatmydata_maybe apt-get ${APT_GET_OPTIONS} autoremove
 
 #### '--------------------------------------------------------------------------
 info ' Restoring Whonix apt-get'
