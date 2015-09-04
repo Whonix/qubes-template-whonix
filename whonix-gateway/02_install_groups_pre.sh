@@ -33,7 +33,7 @@ whonix_build_options=(
     "--headers linux-headers-amd64"
     "--unsafe-io true"
     "--report minimal"
-    "--verifiable minimal"
+    "--verifiable false"
     "--allow-uncommitted true"
     "--allow-untagged true"
     "--sanity-tests false"
