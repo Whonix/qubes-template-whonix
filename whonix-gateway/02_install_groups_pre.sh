@@ -24,7 +24,6 @@ info ' Setting whonix build options'
 #### '----------------------------------------------------------------------
 whonix_build_options=(
     "--flavor ${TEMPLATE_FLAVOR}"
-    "--"
     "--build"
     "--arch amd64"
     "--freshness current"
@@ -44,34 +43,6 @@ whonix_build_options+=("--whonix-repo '$WHONIX_APT_REPOSITORY_OPTS'")
 if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
     whonix_build_options+=("--tb closed")
 fi
-
-
-# ==============================================================================
-# chroot Whonix build script
-# ==============================================================================
-read -r -d '' WHONIX_BUILD_SCRIPT <<EOF || true
-#!/bin/bash -e
-# vim: set ts=4 sw=4 sts=4 et :
-
-# ------------------------------------------------------------------------------
-# Prevents Whonix makefile use of shared memory 'sem_open: Permission denied'
-# ------------------------------------------------------------------------------
-sudo mount -t tmpfs tmpfs /dev/shm
-
-# =============================================================================
-# WHONIX BUILD COMMAND
-# =============================================================================
-#$eatmydata_maybe /home/user/Whonix/whonix_build
-
-pushd ~/Whonix
-
-env \
-   LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
-   REPO_PROXY=${REPO_PROXY} \
-      sudo -E ~/Whonix/whonix_build ${whonix_build_options[@]} || { exit 1; }
-
-popd
-EOF
 
 ##### '-------------------------------------------------------------------------
 debug ' Preparing Whonix for installation'
@@ -152,32 +123,28 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${
     mount --bind "${BUILDER_DIR}/${SRC_DIR}/Whonix" "${INSTALLDIR}/home/user/Whonix"
 
     #### '----------------------------------------------------------------------
-    info ' Installing Whonix build scripts'
-    #### '----------------------------------------------------------------------
-    echo "${WHONIX_BUILD_SCRIPT_PRE}" > "${INSTALLDIR}/home/user/whonix_build_pre"
-    chmod 0755 "${INSTALLDIR}/home/user/whonix_build_pre"
-    cat "${INSTALLDIR}/home/user/whonix_build_pre"
-
-    echo "${WHONIX_BUILD_SCRIPT}" > "${INSTALLDIR}/home/user/whonix_build"
-    chmod 0755 "${INSTALLDIR}/home/user/whonix_build"
-
-    #### '----------------------------------------------------------------------
-    info ' Bind /dev/pts for build'
+    info ' mounts...'
     #### '----------------------------------------------------------------------
     mount --bind /dev "${INSTALLDIR}/dev"
-    mount --bind /dev/pts "${INSTALLDIR}/dev/pts"
+
+    ## Workaround for issue:
+    ## sem_open: Permission denied
+    ## https://phabricator.whonix.org/T369
+    ## Can be removed as soon as Whonix packages as no longer build using faketime.
+    chmod o+w "${INSTALLDIR}/dev/shm"
 
     #### '----------------------------------------------------------------------
-    info 'Executing whonix_build script now...'
+    info ' Executing whonix_build script now...'
     #### '----------------------------------------------------------------------
-    if [ "x${BUILD_LOG}" != "x" ]; then
-        set -o pipefail
-        chroot sudo -u user /home/user/whonix_build 3>&2 2>&1 | tee -a ${BUILD_LOG} || { exit 1; }
-        ## Deactivate pipefail. (Other Qubes scripts such as umount_kill are not compatible with it.)
-        set +o pipefail
-    else
-        chroot sudo -u user /home/user/whonix_build || { exit 1; }
-    fi
+
+    ## Using ~/Whonix/help-steps/whonix_build_one instead of ~/Whonix/whonix_build,
+    ## because the --whonix-repo switch in ~/Whonix/whonix_build parser does not
+    ## support spaces.
+    chroot sudo -u user \
+       env \
+          LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
+          REPO_PROXY=${REPO_PROXY} \
+          sudo -E ~/Whonix/help-steps/whonix_build_one ${whonix_build_options[@]} || { exit 1; }
 
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
 fi
