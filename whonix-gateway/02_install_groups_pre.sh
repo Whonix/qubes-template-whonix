@@ -52,10 +52,6 @@ if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
 
     aptInstall sudo
 
-    ## workaround for missing qubes-core-agent's missing dependency on python-xdg
-    ## https://github.com/QubesOS/qubes-issues/issues/1113
-    aptInstall python-xdg
-
     #### '----------------------------------------------------------------------
     info ' Adding a user account for Whonix to build with'
     #### '----------------------------------------------------------------------
