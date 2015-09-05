@@ -65,7 +65,7 @@ if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
         chroot groupadd -f user
         [ -n "$SUDO_UID" ] && USER_OPTS="-u $SUDO_UID"
         chroot useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
-        if [ `chroot id -u user` != 1000 ]; then
+        if [ "$(chroot id -u user)" != 1000 ]; then
             chroot useradd -g user -u 1000 -M -s /bin/bash user-placeholder
         fi
     }
@@ -197,7 +197,7 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/$
     #### '----------------------------------------------------------------------
     info ' Restore default user UID set to so same in all builds regardless of build host'
     #### '----------------------------------------------------------------------
-    if [ -n "`chroot id -u user-placeholder`" ]; then
+    if [ -n "$(chroot id -u user-placeholder)" ]; then
         chroot userdel user-placeholder
         chroot usermod -u 1000 user
     fi
