@@ -134,11 +134,12 @@ if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${
     ## Using ~/Whonix/help-steps/whonix_build_one instead of ~/Whonix/whonix_build,
     ## because the --whonix-repo switch in ~/Whonix/whonix_build parser does not
     ## support spaces.
-    chroot sudo -u user \
-       env \
-          LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
-          REPO_PROXY=${REPO_PROXY} \
-          sudo -E ~/Whonix/help-steps/whonix_build_one ${whonix_build_options[@]} || { exit 1; }
+    chroot \
+       sudo -u user \
+          env \
+             LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
+             REPO_PROXY=${REPO_PROXY} \
+             sudo -E ~/Whonix/help-steps/whonix_build_one ${whonix_build_options[@]} || { exit 1; }
 
     touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
 fi
