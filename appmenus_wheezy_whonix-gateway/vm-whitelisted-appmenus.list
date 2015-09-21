@@ -1,6 +1,4 @@
 konsole.desktop
-gateway-arm.desktop
-gateway-reloadfirewall.desktop
-gateway-reloadtor.desktop
-gateway-restarttor.desktop
-gateway-stoptor.desktop
+dolphin.desktop
+nautilus.desktop
+whonixcheck.desktop
