@@ -63,6 +63,8 @@ get-sources:
 	done; \
 	popd &> /dev/null
 
+## security review qubes-template-whonix Makefile
+## https://github.com/QubesOS/qubes-issues/issues/1319
 .PHONY: verify-sources
 verify-sources:
 	@true
