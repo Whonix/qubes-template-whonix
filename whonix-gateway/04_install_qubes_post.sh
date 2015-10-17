@@ -31,7 +31,6 @@ whonix_build_options=(
     "--kernel linux-image-amd64"
     "--headers linux-headers-amd64"
     "--unsafe-io true"
-    "--verifiable false"
     "--allow-uncommitted true"
     "--allow-untagged true"
     "--sanity-tests false"
