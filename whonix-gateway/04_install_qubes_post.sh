@@ -26,7 +26,6 @@ whonix_build_options=(
     "--flavor ${TEMPLATE_FLAVOR}"
     "--build"
     "--arch amd64"
-    "--freshness current"
     "--target qubes"
     "--kernel linux-image-amd64"
     "--headers linux-headers-amd64"
