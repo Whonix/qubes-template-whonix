@@ -62,18 +62,6 @@ prepareChroot
 installQubesRepo
 
 #### '----------------------------------------------------------------------
-#info ' Create Whonix directory (/home/user/Whonix)'
-#### '----------------------------------------------------------------------
-#if ! [ -d "${INSTALLDIR}/home/user/Whonix" ]; then
-    #chroot_cmd su user -c 'mkdir -p /home/user/Whonix'
-#fi
-
-#### '----------------------------------------------------------------------
-#info " Bind Whonix source directory (${BUILDER_DIR}/${SRC_DIR}/Whonix)"
-#### '----------------------------------------------------------------------
-#mount --bind "${BUILDER_DIR}/${SRC_DIR}/Whonix" "${INSTALLDIR}/home/user/Whonix"
-
-#### '----------------------------------------------------------------------
 info ' mounts...'
 #### '----------------------------------------------------------------------
 mount --bind /dev "${INSTALLDIR}/dev"
