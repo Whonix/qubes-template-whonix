@@ -20,11 +20,8 @@ trap cleanup EXIT
 prepareChroot
 
 ## TODO
-#whonix_build_options=(
-#    "--flavor ${TEMPLATE_FLAVOR}"
 #    "--kernel linux-image-amd64"
 #    "--headers linux-headers-amd64"
-#    "--unsafe-io true"
 
 ## TODO
 ## Adding a user account for Whonix to build with.
