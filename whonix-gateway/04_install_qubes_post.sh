@@ -78,20 +78,6 @@ info ' mounts...'
 #### '----------------------------------------------------------------------
 mount --bind /dev "${INSTALLDIR}/dev"
 
-#### '----------------------------------------------------------------------
-#info ' Executing whonix_build script now...'
-#### '----------------------------------------------------------------------
-
-## Using ~/Whonix/help-steps/whonix_build_one instead of ~/Whonix/whonix_build,
-## because the --whonix-repo switch in ~/Whonix/whonix_build parser does not
-## support spaces.
-#chroot_cmd \
-   #sudo -u user \
-      #env \
-         #LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
-         #REPO_PROXY=${REPO_PROXY} \
-         #sudo -E ~/Whonix/help-steps/whonix_build_one ${whonix_build_options[@]} || { exit 1; }
-
 ## TODO: set to jessie
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="developers"
 
