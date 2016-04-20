@@ -133,17 +133,15 @@ prepareChroot
 ## TODO
 ## install and install from Whonix repo
 
-## TODO: configurable
 ## TODO: set to jessie
-whonix_repository_suite="developers"
+[ -n "$whonix_repository_suite" ] || whonix_repository_suite="developers"
 
-## TODO: configurable
-whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
-gpg_keyserver="keys.gnupg.net"
-whonix_repository_uri="http://www.whonix.org/download/whonixdevelopermetafiles/internal/"
-whonix_repository_components="main"
-whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
-whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
+[ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
+[ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
+[ -n "$whonix_repository_uri" ] || whonix_repository_uri="http://www.whonix.org/download/whonixdevelopermetafiles/internal/"
+[ -n "$whonix_repository_components" ] || whonix_repository_components="main"
+[ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
+[ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
 
 chroot_cmd apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
 
