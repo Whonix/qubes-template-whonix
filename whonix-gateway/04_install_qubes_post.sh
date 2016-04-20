@@ -129,10 +129,6 @@ prepareChroot
     #touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
 #fi
 
-## TODO
-## TODO
-## install and install from Whonix repo
-
 ## TODO: set to jessie
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="developers"
 
