@@ -30,11 +30,6 @@ prepareChroot
 # --whonix-repo ${WHONIX_APT_REPOSITORY_OPTS}
 # sudo whonix_repository --enable --suite ....................
 
-## TODO: should be done by tb-updater postinst?
-#if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
-#    whonix_build_options+=("--tb closed")
-#fi
-
 ## TODO
 ## Adding a user account for Whonix to build with.
 #chroot_cmd id -u 'user' >/dev/null 2>&1 || \
