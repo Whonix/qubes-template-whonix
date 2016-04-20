@@ -47,14 +47,14 @@ prepareChroot
     #### '----------------------------------------------------------------------
     #info ' Adding a user account for Whonix to build with'
     #### '----------------------------------------------------------------------
-    #chroot id -u 'user' >/dev/null 2>&1 || \
+    #chroot_cmd id -u 'user' >/dev/null 2>&1 || \
     #{
         # UID needs match host user to have access to Whonix sources
-        #chroot groupadd -f user
+        #chroot_cmd groupadd -f user
         #[ -n "$SUDO_UID" ] && USER_OPTS="-u $SUDO_UID"
-        #chroot useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
-        #if [ `chroot id -u user` != 1000 ]; then
-            #chroot useradd -g user -u 1000 -M -s /bin/bash user-placeholder
+        #chroot_cmd useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
+        #if [ `chroot_cmd id -u user` != 1000 ]; then
+            #chroot_cmd useradd -g user -u 1000 -M -s /bin/bash user-placeholder
         #fi
     #}
 
@@ -93,7 +93,7 @@ prepareChroot
     #info ' Create Whonix directory (/home/user/Whonix)'
     #### '----------------------------------------------------------------------
     #if ! [ -d "${INSTALLDIR}/home/user/Whonix" ]; then
-        #chroot su user -c 'mkdir -p /home/user/Whonix'
+        #chroot_cmd su user -c 'mkdir -p /home/user/Whonix'
     #fi
 
     #### '----------------------------------------------------------------------
@@ -119,7 +119,7 @@ prepareChroot
     ## Using ~/Whonix/help-steps/whonix_build_one instead of ~/Whonix/whonix_build,
     ## because the --whonix-repo switch in ~/Whonix/whonix_build parser does not
     ## support spaces.
-    #chroot \
+    #chroot_cmd \
        #sudo -u user \
           #env \
              #LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
@@ -145,10 +145,10 @@ whonix_repository_components="main"
 whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
 
-chroot apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
+chroot_cmd apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
 
 ## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
-chroot apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
+chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
 
 echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary_apt_sources_list"
 
@@ -199,9 +199,9 @@ aptUpgrade
     #### '----------------------------------------------------------------------
     #info ' Restore default user UID set to so same in all builds regardless of build host'
     #### '----------------------------------------------------------------------
-    #if [ -n "`chroot id -u user-placeholder`" ]; then
-        #chroot userdel user-placeholder
-        #chroot usermod -u 1000 user
+    #if [ -n "`chroot_cmd id -u user-placeholder`" ]; then
+        #chroot_cmd userdel user-placeholder
+        #chroot_cmd usermod -u 1000 user
     #fi
 
     #### '----------------------------------------------------------------------
@@ -241,7 +241,7 @@ UWT_DEV_PASSTHROUGH="1" \
    DEBIAN_FRONTEND="noninteractive" \
    DEBIAN_PRIORITY="critical" \
    DEBCONF_NOWARNINGS="yes" \
-      chroot $eatmydata_maybe \
+      chroot_cmd $eatmydata_maybe \
          apt-get ${APT_GET_OPTIONS} autoremove
 
 #### '--------------------------------------------------------------------------
