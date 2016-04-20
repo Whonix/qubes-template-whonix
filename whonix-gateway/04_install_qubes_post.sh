@@ -229,9 +229,6 @@ updateLocale
 debug ' Whonix post installation cleanup'
 ##### '-------------------------------------------------------------------------
 
-## Can be removed when https://github.com/marmarek/qubes-builder-debian/pull/18 was merged.
-UWT_DEV_PASSTHROUGH="1" aptRemove chrony || true
-
 ## Workaround. ntpdate needs to be removed here, because it can not be removed from
 ## template_debian/packages_qubes.list, because that would break minimal Debian templates.
 ## https://github.com/QubesOS/qubes-issues/issues/1102
