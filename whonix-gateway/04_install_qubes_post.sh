@@ -56,18 +56,6 @@ prepareChroot
 #### '----------------------------------------------------------------------
 #copyTree "files"
 
-# Install Tor browser to /home/user by default. (build-step only)
-#
-# Set tor-browser installation directory.  This can't really be put in
-# 'qubes-whonix' postinst since the value is not static if a custom
-# directory location is chosen.
-#if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
-    #if [ -n "${WHONIX_INSTALL_TB_DIRECTORY}" ]; then
-        #mkdir -p "${INSTALLDIR}/etc/torbrowser.d"
-        #echo "tb_home_folder=${WHONIX_INSTALL_TB_DIRECTORY}" > "${INSTALLDIR}/etc/torbrowser.d/40_whonix_build"
-    #fi
-#fi
-
 ## Install Qubes' repository so dependencies of the qubes-whonix package
 ## that gets installed by Whonix's build script will be available.
 ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
