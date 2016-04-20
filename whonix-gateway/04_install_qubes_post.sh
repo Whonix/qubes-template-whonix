@@ -134,6 +134,8 @@ echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary
 
 aptUpdate
 
+[ -n "$DEBDEBUG" ] || DEBDEBUG="1"
+
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
    aptInstall qubes-whonix-gateway
 elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
