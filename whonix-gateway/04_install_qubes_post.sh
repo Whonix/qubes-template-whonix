@@ -36,9 +36,7 @@ prepareChroot
 #fi
 
 ## TODO
-#### '----------------------------------------------------------------------
-#info ' Adding a user account for Whonix to build with'
-#### '----------------------------------------------------------------------
+## Adding a user account for Whonix to build with.
 #chroot_cmd id -u 'user' >/dev/null 2>&1 || \
 #{
     # UID needs match host user to have access to Whonix sources
@@ -51,9 +49,7 @@ prepareChroot
 #}
 
 ## TODO
-#### '----------------------------------------------------------------------
-#info ' Copying additional files required for build'
-#### '----------------------------------------------------------------------
+## Copying additional files required for build.
 #copyTree "files"
 
 ## Install Qubes' repository so dependencies of the qubes-whonix package
@@ -61,9 +57,6 @@ prepareChroot
 ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
 installQubesRepo
 
-#### '----------------------------------------------------------------------
-info ' mounts...'
-#### '----------------------------------------------------------------------
 mount --bind /dev "${INSTALLDIR}/dev"
 
 ## TODO: set to jessie
@@ -121,17 +114,13 @@ fi
 uninstallQubesRepo
 
 ## TODO: No longer required or can be done in postinst script?
-#### '----------------------------------------------------------------------
-#info ' Restore default user UID set to so same in all builds regardless of build host'
-#### '----------------------------------------------------------------------
+## Restore default user UID set to so same in all builds regardless of build host.
 #if [ -n "`chroot_cmd id -u user-placeholder`" ]; then
     #chroot_cmd userdel user-placeholder
     #chroot_cmd usermod -u 1000 user
 #fi
 
-#### '----------------------------------------------------------------------
-info 'Maybe Enable Tor'
-#### '----------------------------------------------------------------------
+## Maybe Enable Tor.
 if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
     sed -i "s/^#DisableNetwork/DisableNetwork/g" "${INSTALLDIR}/etc/tor/torrc"
 fi
@@ -147,10 +136,6 @@ fi
 ## https://github.com/QubesOS/qubes-issues/issues/1055
 updateLocale
 
-##### '-------------------------------------------------------------------------
-debug ' Whonix post installation cleanup'
-##### '-------------------------------------------------------------------------
-
 ## Workaround. ntpdate needs to be removed here, because it can not be removed from
 ## template_debian/packages_qubes.list, because that would break minimal Debian templates.
 ## https://github.com/QubesOS/qubes-issues/issues/1102
@@ -163,9 +148,7 @@ UWT_DEV_PASSTHROUGH="1" \
       chroot_cmd $eatmydata_maybe \
          apt-get ${APT_GET_OPTIONS} autoremove
 
-#### '--------------------------------------------------------------------------
-info ' Cleanup'
-#### '--------------------------------------------------------------------------
+## Cleanup.
 umount_all "${INSTALLDIR}/" || true
 trap - ERR EXIT
 trap
