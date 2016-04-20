@@ -35,91 +35,74 @@ prepareChroot
 #    whonix_build_options+=("--tb closed")
 #fi
 
-##### '-------------------------------------------------------------------------
-#debug ' Preparing Whonix for installation'
-##### '-------------------------------------------------------------------------
-#if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
-    #info "Preparing Whonix system"
-
-    ## TODO
-    #### '----------------------------------------------------------------------
-    #info ' Adding a user account for Whonix to build with'
-    #### '----------------------------------------------------------------------
-    #chroot_cmd id -u 'user' >/dev/null 2>&1 || \
-    #{
-        # UID needs match host user to have access to Whonix sources
-        #chroot_cmd groupadd -f user
-        #[ -n "$SUDO_UID" ] && USER_OPTS="-u $SUDO_UID"
-        #chroot_cmd useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
-        #if [ `chroot_cmd id -u user` != 1000 ]; then
-            #chroot_cmd useradd -g user -u 1000 -M -s /bin/bash user-placeholder
-        #fi
-    #}
-
-    ## TODO
-    #### '----------------------------------------------------------------------
-    #info ' Copying additional files required for build'
-    #### '----------------------------------------------------------------------
-    #copyTree "files"
-
-    # Install Tor browser to /home/user by default. (build-step only)
-    #
-    # Set tor-browser installation directory.  This can't really be put in
-    # 'qubes-whonix' postinst since the value is not static if a custom
-    # directory location is chosen.
-    #if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
-        #if [ -n "${WHONIX_INSTALL_TB_DIRECTORY}" ]; then
-            #mkdir -p "${INSTALLDIR}/etc/torbrowser.d"
-            #echo "tb_home_folder=${WHONIX_INSTALL_TB_DIRECTORY}" > "${INSTALLDIR}/etc/torbrowser.d/40_whonix_build"
-        #fi
+## TODO
+#### '----------------------------------------------------------------------
+#info ' Adding a user account for Whonix to build with'
+#### '----------------------------------------------------------------------
+#chroot_cmd id -u 'user' >/dev/null 2>&1 || \
+#{
+    # UID needs match host user to have access to Whonix sources
+    #chroot_cmd groupadd -f user
+    #[ -n "$SUDO_UID" ] && USER_OPTS="-u $SUDO_UID"
+    #chroot_cmd useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
+    #if [ `chroot_cmd id -u user` != 1000 ]; then
+        #chroot_cmd useradd -g user -u 1000 -M -s /bin/bash user-placeholder
     #fi
+#}
 
-    #touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared"
+## TODO
+#### '----------------------------------------------------------------------
+#info ' Copying additional files required for build'
+#### '----------------------------------------------------------------------
+#copyTree "files"
+
+# Install Tor browser to /home/user by default. (build-step only)
+#
+# Set tor-browser installation directory.  This can't really be put in
+# 'qubes-whonix' postinst since the value is not static if a custom
+# directory location is chosen.
+#if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
+    #if [ -n "${WHONIX_INSTALL_TB_DIRECTORY}" ]; then
+        #mkdir -p "${INSTALLDIR}/etc/torbrowser.d"
+        #echo "tb_home_folder=${WHONIX_INSTALL_TB_DIRECTORY}" > "${INSTALLDIR}/etc/torbrowser.d/40_whonix_build"
+    #fi
 #fi
 
+## Install Qubes' repository so dependencies of the qubes-whonix package
+## that gets installed by Whonix's build script will be available.
+## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
+installQubesRepo
 
-##### '-------------------------------------------------------------------------
-#debug ' Installing Whonix code base'
-##### '-------------------------------------------------------------------------
-#if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ]; then
-    ## Install Qubes' repository so dependencies of the qubes-whonix package
-    ## that gets installed by Whonix's build script will be available.
-    ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
-    installQubesRepo
-
-    #### '----------------------------------------------------------------------
-    #info ' Create Whonix directory (/home/user/Whonix)'
-    #### '----------------------------------------------------------------------
-    #if ! [ -d "${INSTALLDIR}/home/user/Whonix" ]; then
-        #chroot_cmd su user -c 'mkdir -p /home/user/Whonix'
-    #fi
-
-    #### '----------------------------------------------------------------------
-    #info " Bind Whonix source directory (${BUILDER_DIR}/${SRC_DIR}/Whonix)"
-    #### '----------------------------------------------------------------------
-    #mount --bind "${BUILDER_DIR}/${SRC_DIR}/Whonix" "${INSTALLDIR}/home/user/Whonix"
-
-    #### '----------------------------------------------------------------------
-    info ' mounts...'
-    #### '----------------------------------------------------------------------
-    mount --bind /dev "${INSTALLDIR}/dev"
-
-    #### '----------------------------------------------------------------------
-    #info ' Executing whonix_build script now...'
-    #### '----------------------------------------------------------------------
-
-    ## Using ~/Whonix/help-steps/whonix_build_one instead of ~/Whonix/whonix_build,
-    ## because the --whonix-repo switch in ~/Whonix/whonix_build parser does not
-    ## support spaces.
-    #chroot_cmd \
-       #sudo -u user \
-          #env \
-             #LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
-             #REPO_PROXY=${REPO_PROXY} \
-             #sudo -E ~/Whonix/help-steps/whonix_build_one ${whonix_build_options[@]} || { exit 1; }
-
-    #touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
+#### '----------------------------------------------------------------------
+#info ' Create Whonix directory (/home/user/Whonix)'
+#### '----------------------------------------------------------------------
+#if ! [ -d "${INSTALLDIR}/home/user/Whonix" ]; then
+    #chroot_cmd su user -c 'mkdir -p /home/user/Whonix'
 #fi
+
+#### '----------------------------------------------------------------------
+#info " Bind Whonix source directory (${BUILDER_DIR}/${SRC_DIR}/Whonix)"
+#### '----------------------------------------------------------------------
+#mount --bind "${BUILDER_DIR}/${SRC_DIR}/Whonix" "${INSTALLDIR}/home/user/Whonix"
+
+#### '----------------------------------------------------------------------
+info ' mounts...'
+#### '----------------------------------------------------------------------
+mount --bind /dev "${INSTALLDIR}/dev"
+
+#### '----------------------------------------------------------------------
+#info ' Executing whonix_build script now...'
+#### '----------------------------------------------------------------------
+
+## Using ~/Whonix/help-steps/whonix_build_one instead of ~/Whonix/whonix_build,
+## because the --whonix-repo switch in ~/Whonix/whonix_build parser does not
+## support spaces.
+#chroot_cmd \
+   #sudo -u user \
+      #env \
+         #LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
+         #REPO_PROXY=${REPO_PROXY} \
+         #sudo -E ~/Whonix/help-steps/whonix_build_one ${whonix_build_options[@]} || { exit 1; }
 
 ## TODO: set to jessie
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="developers"
@@ -171,36 +154,29 @@ else
    error "TEMPLATE_FLAVOR is neither whonix-gateway nor whonix-workstation, it is: ${TEMPLATE_FLAVOR}"
 fi
 
-##### '-------------------------------------------------------------------------
-#debug ' Whonix Post Installation Configurations'
-##### '-------------------------------------------------------------------------
-#if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_post" ]; then
-    uninstallQubesRepo
+uninstallQubesRepo
 
-    ## TODO: No longer required or can be done in postinst script?
-    #### '----------------------------------------------------------------------
-    #info ' Restore default user UID set to so same in all builds regardless of build host'
-    #### '----------------------------------------------------------------------
-    #if [ -n "`chroot_cmd id -u user-placeholder`" ]; then
-        #chroot_cmd userdel user-placeholder
-        #chroot_cmd usermod -u 1000 user
-    #fi
+## TODO: No longer required or can be done in postinst script?
+#### '----------------------------------------------------------------------
+#info ' Restore default user UID set to so same in all builds regardless of build host'
+#### '----------------------------------------------------------------------
+#if [ -n "`chroot_cmd id -u user-placeholder`" ]; then
+    #chroot_cmd userdel user-placeholder
+    #chroot_cmd usermod -u 1000 user
+#fi
 
-    #### '----------------------------------------------------------------------
-    info 'Maybe Enable Tor'
-    #### '----------------------------------------------------------------------
-    if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
-        sed -i "s/^#DisableNetwork/DisableNetwork/g" "${INSTALLDIR}/etc/tor/torrc"
-    fi
+#### '----------------------------------------------------------------------
+info 'Maybe Enable Tor'
+#### '----------------------------------------------------------------------
+if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
+    sed -i "s/^#DisableNetwork/DisableNetwork/g" "${INSTALLDIR}/etc/tor/torrc"
+fi
 
 if [ -e "${INSTALLDIR}/etc/apt/sources.list.d/debian.list" ]; then
     info ' Remove original sources.list (Whonix package anon-apt-sources-list \
 ships /etc/apt/sources.list.d/debian.list)'
     rm -f "${INSTALLDIR}/etc/apt/sources.list"
 fi
-
-    #touch "${INSTALLDIR}/${TMPDIR}/.whonix_post"
-#fi
 
 ## Workaround for Qubes bug:
 ## 'Debian Template: rely on existing tool for base image creation'
