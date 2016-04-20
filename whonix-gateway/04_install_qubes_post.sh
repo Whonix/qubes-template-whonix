@@ -185,10 +185,6 @@ else
    error "TEMPLATE_FLAVOR is neither whonix-gateway nor whonix-workstation, it is: ${TEMPLATE_FLAVOR}"
 fi
 
-## TODO: required?
-## Just in case.
-aptUpgrade
-
 ##### '-------------------------------------------------------------------------
 #debug ' Whonix Post Installation Configurations'
 ##### '-------------------------------------------------------------------------
