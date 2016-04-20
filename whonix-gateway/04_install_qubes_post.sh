@@ -41,8 +41,6 @@ prepareChroot
 #if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
     #info "Preparing Whonix system"
 
-    #aptInstall sudo
-
     ## TODO
     #### '----------------------------------------------------------------------
     #info ' Adding a user account for Whonix to build with'
