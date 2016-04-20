@@ -27,10 +27,6 @@ prepareChroot
 #    "--unsafe-io true"
 
 ## TODO
-# --whonix-repo ${WHONIX_APT_REPOSITORY_OPTS}
-# sudo whonix_repository --enable --suite ....................
-
-## TODO
 ## Adding a user account for Whonix to build with.
 #chroot_cmd id -u 'user' >/dev/null 2>&1 || \
 #{
