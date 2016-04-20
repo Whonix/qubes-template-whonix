@@ -106,12 +106,6 @@ prepareChroot
     #### '----------------------------------------------------------------------
     mount --bind /dev "${INSTALLDIR}/dev"
 
-    ## Workaround for issue:
-    ## sem_open: Permission denied
-    ## https://phabricator.whonix.org/T369
-    ## Can be removed as soon as Whonix packages as no longer build using faketime.
-    #chmod o+w "${INSTALLDIR}/dev/shm"
-
     #### '----------------------------------------------------------------------
     #info ' Executing whonix_build script now...'
     #### '----------------------------------------------------------------------
