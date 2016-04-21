@@ -71,29 +71,6 @@ $chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
 
 echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary_apt_sources_list"
 
-## TODO: check for
-## apt-get
-## -o Dir::Etc::sourcelist=/tmp/empty
-## -o Dir::Etc::sourceparts=/var/lib/whonix/sources_temp_list.d
-
-## TODO: check for
-## -o Acquire::http::Timeout=180
-## -o Acquire::ftp::Timeout=180
-## -o Acquire::Retries=3
-
-## TODO: check for
-## -o APT::Get::force-yes=0
-## -o Dpkg::Options::=--force-confnew
-
-## TODO: check for
-## -o Dpkg::Options::=--force-unsafe-io
-
-## TODO: check for
-## -o Acquire::http::Proxy=http://127.0.0.1:3142
-
-## TODO: check for
-## --no-install-recommends
-
 aptUpdate
 
 [ -n "$DEBDEBUG" ] || export DEBDEBUG="1"
