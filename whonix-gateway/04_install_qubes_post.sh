@@ -19,20 +19,27 @@ trap cleanup EXIT
 
 prepareChroot
 
+## Qubes R3.1 compatibility.
+## Can be removed on Qubes R3.2 and above.
+## https://github.com/QubesOS/qubes-issues/issues/1174
+if [ ! "$(type -t chroot_cmd)" = "function" ]; then
+   chroot_cmd="chroot"
+fi
+
 ## TODO
 #    "--kernel linux-image-amd64"
 #    "--headers linux-headers-amd64"
 
 ## TODO
 ## Adding a user account for Whonix to build with.
-#chroot_cmd id -u 'user' >/dev/null 2>&1 || \
+#$chroot_cmd id -u 'user' >/dev/null 2>&1 || \
 #{
     # UID needs match host user to have access to Whonix sources
-    #chroot_cmd groupadd -f user
+    #$chroot_cmd groupadd -f user
     #[ -n "$SUDO_UID" ] && USER_OPTS="-u $SUDO_UID"
-    #chroot_cmd useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
-    #if [ `chroot_cmd id -u user` != 1000 ]; then
-        #chroot_cmd useradd -g user -u 1000 -M -s /bin/bash user-placeholder
+    #$chroot_cmd useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
+    #if [ `$chroot_cmd id -u user` != 1000 ]; then
+        #$chroot_cmd useradd -g user -u 1000 -M -s /bin/bash user-placeholder
     #fi
 #}
 
@@ -57,10 +64,10 @@ mount --bind /dev "${INSTALLDIR}/dev"
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
 
-chroot_cmd apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
+$chroot_cmd apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
 
 ## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
-chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
+$chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
 
 echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary_apt_sources_list"
 
@@ -89,7 +96,7 @@ echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary
 
 aptUpdate
 
-[ -n "$DEBDEBUG" ] || DEBDEBUG="1"
+[ -n "$DEBDEBUG" ] || export DEBDEBUG="1"
 
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
    aptInstall qubes-whonix-gateway
@@ -103,9 +110,9 @@ uninstallQubesRepo
 
 ## TODO: No longer required or can be done in postinst script?
 ## Restore default user UID set to so same in all builds regardless of build host.
-#if [ -n "`chroot_cmd id -u user-placeholder`" ]; then
-    #chroot_cmd userdel user-placeholder
-    #chroot_cmd usermod -u 1000 user
+#if [ -n "`$chroot_cmd id -u user-placeholder`" ]; then
+    #$chroot_cmd userdel user-placeholder
+    #$chroot_cmd usermod -u 1000 user
 #fi
 
 ## Maybe Enable Tor.
@@ -133,7 +140,7 @@ UWT_DEV_PASSTHROUGH="1" \
    DEBIAN_FRONTEND="noninteractive" \
    DEBIAN_PRIORITY="critical" \
    DEBCONF_NOWARNINGS="yes" \
-      chroot_cmd $eatmydata_maybe \
+      $chroot_cmd $eatmydata_maybe \
          apt-get ${APT_GET_OPTIONS} autoremove
 
 ## Cleanup.
