@@ -26,10 +26,6 @@ if [ ! "$(type -t chroot_cmd)" = "function" ]; then
    chroot_cmd="chroot"
 fi
 
-## TODO
-## Copying additional files required for build.
-#copyTree "files"
-
 mount --bind /dev "${INSTALLDIR}/dev"
 
 ## Install Qubes' repository so dependencies of the qubes-whonix package
