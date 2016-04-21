@@ -47,10 +47,14 @@ installQubesRepo
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
 
-$chroot_cmd apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
+if [ "$whonix_signing_key_fingerprint" = "none" ]; then
+   info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore apt-key adding as requested."
+else
+   $chroot_cmd apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
 
-## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
-$chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
+   ## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
+   $chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
+fi
 
 echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary_apt_sources_list"
 
