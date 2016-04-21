@@ -30,12 +30,12 @@ fi
 ## Copying additional files required for build.
 #copyTree "files"
 
+mount --bind /dev "${INSTALLDIR}/dev"
+
 ## Install Qubes' repository so dependencies of the qubes-whonix package
 ## that gets installed by Whonix's build script will be available.
 ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
 installQubesRepo
-
-mount --bind /dev "${INSTALLDIR}/dev"
 
 ## TODO: set to jessie
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="developers"
