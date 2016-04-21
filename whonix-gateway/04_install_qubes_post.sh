@@ -68,15 +68,15 @@ fi
 
 uninstallQubesRepo
 
-## Maybe Enable Tor.
-if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
-    sed -i "s/^#DisableNetwork/DisableNetwork/g" "${INSTALLDIR}/etc/tor/torrc"
-fi
-
 if [ -e "${INSTALLDIR}/etc/apt/sources.list.d/debian.list" ]; then
     info ' Remove original sources.list (Whonix package anon-apt-sources-list \
 ships /etc/apt/sources.list.d/debian.list)'
     rm -f "${INSTALLDIR}/etc/apt/sources.list"
+fi
+
+## Maybe Enable Tor.
+if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
+    sed -i "s/^#DisableNetwork/DisableNetwork/g" "${INSTALLDIR}/etc/tor/torrc"
 fi
 
 ## Workaround for Qubes bug:
