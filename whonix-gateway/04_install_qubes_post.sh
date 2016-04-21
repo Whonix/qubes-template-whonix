@@ -27,10 +27,6 @@ if [ ! "$(type -t chroot_cmd)" = "function" ]; then
 fi
 
 ## TODO
-#    "--kernel linux-image-amd64"
-#    "--headers linux-headers-amd64"
-
-## TODO
 ## Adding a user account for Whonix to build with.
 #$chroot_cmd id -u 'user' >/dev/null 2>&1 || \
 #{
