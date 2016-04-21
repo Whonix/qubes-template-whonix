@@ -68,6 +68,8 @@ fi
 
 uninstallQubesRepo
 
+rm -f "${INSTALLDIR}/$whonix_repository_temporary_apt_sources_list"
+
 if [ -e "${INSTALLDIR}/etc/apt/sources.list.d/debian.list" ]; then
     info ' Remove original sources.list (Whonix package anon-apt-sources-list \
 ships /etc/apt/sources.list.d/debian.list)'
