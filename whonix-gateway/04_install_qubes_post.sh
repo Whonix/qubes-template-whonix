@@ -27,19 +27,6 @@ if [ ! "$(type -t chroot_cmd)" = "function" ]; then
 fi
 
 ## TODO
-## Adding a user account for Whonix to build with.
-#$chroot_cmd id -u 'user' >/dev/null 2>&1 || \
-#{
-    # UID needs match host user to have access to Whonix sources
-    #$chroot_cmd groupadd -f user
-    #[ -n "$SUDO_UID" ] && USER_OPTS="-u $SUDO_UID"
-    #$chroot_cmd useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
-    #if [ `$chroot_cmd id -u user` != 1000 ]; then
-        #$chroot_cmd useradd -g user -u 1000 -M -s /bin/bash user-placeholder
-    #fi
-#}
-
-## TODO
 ## Copying additional files required for build.
 #copyTree "files"
 
@@ -80,13 +67,6 @@ else
 fi
 
 uninstallQubesRepo
-
-## TODO: No longer required or can be done in postinst script?
-## Restore default user UID set to so same in all builds regardless of build host.
-#if [ -n "`$chroot_cmd id -u user-placeholder`" ]; then
-    #$chroot_cmd userdel user-placeholder
-    #$chroot_cmd usermod -u 1000 user
-#fi
 
 ## Maybe Enable Tor.
 if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
