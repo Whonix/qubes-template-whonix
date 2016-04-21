@@ -11,3 +11,7 @@ source "${SCRIPTSDIR}/distribution.sh"
 ##### '-------------------------------------------------------------------------
 debug ' Whonix post installation cleanup'
 ##### '-------------------------------------------------------------------------
+
+if [ -x "${INSTALLDIR}/usr/lib/anon-dist/chroot-scripts-post.d/80_cleanup" ]; then
+   "${INSTALLDIR}/usr/lib/anon-dist/chroot-scripts-post.d/80_cleanup"
+fi
