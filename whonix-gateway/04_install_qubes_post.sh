@@ -22,7 +22,9 @@ prepareChroot
 ## Qubes R3.1 compatibility.
 ## Can be removed on Qubes R3.2 and above.
 ## https://github.com/QubesOS/qubes-issues/issues/1174
-if [ ! "$(type -t chroot_cmd)" = "function" ]; then
+if [ "$(type -t chroot_cmd)" = "function" ]; then
+   chroot_cmd="chroot_cmd"
+else
    chroot_cmd="chroot"
 fi
 
