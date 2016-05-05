@@ -12,11 +12,15 @@ source "${SCRIPTSDIR}/distribution.sh"
 debug ' Whonix post installation cleanup'
 ##### '-------------------------------------------------------------------------
 
-#### '--------------------------------------------------------------------------
-info ' Removing files created during installation that are no longer required'
-#### '--------------------------------------------------------------------------
-rm -rf "${INSTALLDIR}/home.orig/user/Whonix"
-rm -rf "${INSTALLDIR}/home.orig/user/whonix_binary"
-rm -f "${INSTALLDIR}/etc/sudoers.d/whonix-build"
-rm -f "${INSTALLDIR}/etc/torbrowser.d/40_whonix_build"
-rm -f "${TMPDIR}/etc/sudoers.d/whonix-build"
+## Qubes R3.1 compatibility.
+## Can be removed on Qubes R3.2 and above.
+## https://github.com/QubesOS/qubes-issues/issues/1174
+if [ "$(type -t chroot_cmd)" = "function" ]; then
+   chroot_cmd="chroot_cmd"
+else
+   chroot_cmd="chroot"
+fi
+
+if [ -x "${INSTALLDIR}/usr/lib/anon-dist/chroot-scripts-post.d/80_cleanup" ]; then
+   $chroot_cmd "/usr/lib/anon-dist/chroot-scripts-post.d/80_cleanup"
+fi

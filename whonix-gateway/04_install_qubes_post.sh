@@ -19,162 +19,74 @@ trap cleanup EXIT
 
 prepareChroot
 
-#### '----------------------------------------------------------------------
-info ' Setting whonix build options'
-#### '----------------------------------------------------------------------
-whonix_build_options=(
-    "--flavor ${TEMPLATE_FLAVOR}"
-    "--build"
-    "--arch amd64"
-    "--target qubes"
-    "--kernel linux-image-amd64"
-    "--headers linux-headers-amd64"
-    "--unsafe-io true"
-    "--allow-uncommitted true"
-    "--allow-untagged true"
-    "--sanity-tests false"
-)
-
-whonix_build_options+=("--whonix-repo ${WHONIX_APT_REPOSITORY_OPTS}")
-
-if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
-    whonix_build_options+=("--tb closed")
+## Qubes R3.1 compatibility.
+## Can be removed on Qubes R3.2 and above.
+## https://github.com/QubesOS/qubes-issues/issues/1174
+if [ "$(type -t chroot_cmd)" = "function" ]; then
+   chroot_cmd="chroot_cmd"
+else
+   chroot_cmd="chroot"
 fi
 
-##### '-------------------------------------------------------------------------
-debug ' Preparing Whonix for installation'
-##### '-------------------------------------------------------------------------
-if ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ]; then
-    info "Preparing Whonix system"
+mount --bind /dev "${INSTALLDIR}/dev"
 
-    aptInstall sudo
+## Install Qubes' repository so dependencies of the qubes-whonix package
+## that gets installed by Whonix's build script will be available.
+## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
+installQubesRepo
 
-    #### '----------------------------------------------------------------------
-    info ' Adding a user account for Whonix to build with'
-    #### '----------------------------------------------------------------------
-    chroot_cmd id -u 'user' >/dev/null 2>&1 || \
-    {
-        # UID needs match host user to have access to Whonix sources
-        chroot_cmd groupadd -f user
-        [ -n "$SUDO_UID" ] && USER_OPTS="-u $SUDO_UID"
-        chroot_cmd useradd -g user $USER_OPTS -G sudo,audio -m -s /bin/bash user
-        if [ `chroot_cmd id -u user` != 1000 ]; then
-            chroot_cmd useradd -g user -u 1000 -M -s /bin/bash user-placeholder
-        fi
-    }
+## TODO: set to jessie
+[ -n "$whonix_repository_suite" ] || whonix_repository_suite="developers"
 
-    #### '----------------------------------------------------------------------
-    info ' Copying additional files required for build'
-    #### '----------------------------------------------------------------------
-    copyTree "files"
+[ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
+[ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
+[ -n "$whonix_repository_uri" ] || whonix_repository_uri="http://www.whonix.org/download/whonixdevelopermetafiles/internal/"
+[ -n "$whonix_repository_components" ] || whonix_repository_components="main"
+[ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
+[ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
 
-    # Install Tor browser to /home/user by default. (build-step only)
-    #
-    # Set tor-browser installation directory.  This can't really be put in
-    # 'qubes-whonix' postinst since the value is not static if a custom
-    # directory location is chosen.
-    if [ "${TEMPLATE_FLAVOR}" == "whonix-workstation" ] && [ "${WHONIX_INSTALL_TB}" -eq 1 ]; then
-        if [ -n "${WHONIX_INSTALL_TB_DIRECTORY}" ]; then
-            mkdir -p "${INSTALLDIR}/etc/torbrowser.d"
-            echo "tb_home_folder=${WHONIX_INSTALL_TB_DIRECTORY}" > "${INSTALLDIR}/etc/torbrowser.d/40_whonix_build"
-        fi
-    fi
+if [ "$whonix_signing_key_fingerprint" = "none" ]; then
+   info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore apt-key adding as requested."
+else
+   $chroot_cmd apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
 
-    touch "${INSTALLDIR}/${TMPDIR}/.whonix_prepared"
+   ## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
+   $chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
 fi
 
+echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary_apt_sources_list"
 
-##### '-------------------------------------------------------------------------
-debug ' Installing Whonix code base'
-##### '-------------------------------------------------------------------------
-if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_prepared" ] && ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ]; then
-    ## Install Qubes' repository so dependencies of the qubes-whonix package
-    ## that gets installed by Whonix's build script will be available.
-    ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
-    installQubesRepo
+aptUpdate
 
-    #### '----------------------------------------------------------------------
-    info ' Create Whonix directory (/home/user/Whonix)'
-    #### '----------------------------------------------------------------------
-    if ! [ -d "${INSTALLDIR}/home/user/Whonix" ]; then
-        chroot_cmd su user -c 'mkdir -p /home/user/Whonix'
-    fi
+[ -n "$DEBDEBUG" ] || export DEBDEBUG="1"
 
-    #### '----------------------------------------------------------------------
-    info " Bind Whonix source directory (${BUILDER_DIR}/${SRC_DIR}/Whonix)"
-    #### '----------------------------------------------------------------------
-    mount --bind "${BUILDER_DIR}/${SRC_DIR}/Whonix" "${INSTALLDIR}/home/user/Whonix"
-
-    #### '----------------------------------------------------------------------
-    info ' mounts...'
-    #### '----------------------------------------------------------------------
-    mount --bind /dev "${INSTALLDIR}/dev"
-
-    ## Workaround for issue:
-    ## sem_open: Permission denied
-    ## https://phabricator.whonix.org/T369
-    ## Can be removed as soon as Whonix packages as no longer build using faketime.
-    chmod o+w "${INSTALLDIR}/dev/shm"
-
-    #### '----------------------------------------------------------------------
-    info ' Executing whonix_build script now...'
-    #### '----------------------------------------------------------------------
-
-    ## Using ~/Whonix/help-steps/whonix_build_one instead of ~/Whonix/whonix_build,
-    ## because the --whonix-repo switch in ~/Whonix/whonix_build parser does not
-    ## support spaces.
-    chroot_cmd \
-       sudo -u user \
-          env \
-             LD_PRELOAD=${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so \
-             REPO_PROXY=${REPO_PROXY} \
-             sudo -E ~/Whonix/help-steps/whonix_build_one ${whonix_build_options[@]} || { exit 1; }
-
-    touch "${INSTALLDIR}/${TMPDIR}/.whonix_installed"
+if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
+   aptInstall qubes-whonix-gateway
+elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
+   aptInstall qubes-whonix-workstation
+else
+   error "TEMPLATE_FLAVOR is neither whonix-gateway nor whonix-workstation, it is: ${TEMPLATE_FLAVOR}"
 fi
 
+uninstallQubesRepo
 
-##### '-------------------------------------------------------------------------
-debug ' Whonix Post Installation Configurations'
-##### '-------------------------------------------------------------------------
-if [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_installed" ] && ! [ -f "${INSTALLDIR}/${TMPDIR}/.whonix_post" ]; then
-    uninstallQubesRepo
+rm -f "${INSTALLDIR}/$whonix_repository_temporary_apt_sources_list"
 
-    #### '----------------------------------------------------------------------
-    info ' Restore default user UID set to so same in all builds regardless of build host'
-    #### '----------------------------------------------------------------------
-    if [ -n "`chroot_cmd id -u user-placeholder`" ]; then
-        chroot_cmd userdel user-placeholder
-        chroot_cmd usermod -u 1000 user
-    fi
-
-    #### '----------------------------------------------------------------------
-    info 'Maybe Enable Tor'
-    #### '----------------------------------------------------------------------
-    if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
-        sed -i "s/^#DisableNetwork/DisableNetwork/g" "${INSTALLDIR}/etc/tor/torrc"
-    fi
-
-    #### '----------------------------------------------------------------------
+if [ -e "${INSTALLDIR}/etc/apt/sources.list.d/debian.list" ]; then
     info ' Remove original sources.list (Whonix package anon-apt-sources-list \
 ships /etc/apt/sources.list.d/debian.list)'
-    #### '----------------------------------------------------------------------
     rm -f "${INSTALLDIR}/etc/apt/sources.list"
+fi
 
-    touch "${INSTALLDIR}/${TMPDIR}/.whonix_post"
+## Maybe Enable Tor.
+if [ "${TEMPLATE_FLAVOR}" == "whonix-gateway" ] && [ "${WHONIX_ENABLE_TOR}" -eq 1 ]; then
+    sed -i "s/^#DisableNetwork/DisableNetwork/g" "${INSTALLDIR}/etc/tor/torrc"
 fi
 
 ## Workaround for Qubes bug:
 ## 'Debian Template: rely on existing tool for base image creation'
 ## https://github.com/QubesOS/qubes-issues/issues/1055
 updateLocale
-
-##### '-------------------------------------------------------------------------
-debug ' Whonix post installation cleanup'
-##### '-------------------------------------------------------------------------
-
-## Can be removed when https://github.com/marmarek/qubes-builder-debian/pull/18 was merged.
-UWT_DEV_PASSTHROUGH="1" aptRemove chrony || true
 
 ## Workaround. ntpdate needs to be removed here, because it can not be removed from
 ## template_debian/packages_qubes.list, because that would break minimal Debian templates.
@@ -185,12 +97,10 @@ UWT_DEV_PASSTHROUGH="1" \
    DEBIAN_FRONTEND="noninteractive" \
    DEBIAN_PRIORITY="critical" \
    DEBCONF_NOWARNINGS="yes" \
-      chroot_cmd $eatmydata_maybe \
+      $chroot_cmd $eatmydata_maybe \
          apt-get ${APT_GET_OPTIONS} autoremove
 
-#### '--------------------------------------------------------------------------
-info ' Cleanup'
-#### '--------------------------------------------------------------------------
+## Cleanup.
 umount_all "${INSTALLDIR}/" || true
 trap - ERR EXIT
 trap
