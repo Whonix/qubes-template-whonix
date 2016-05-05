@@ -25,10 +25,6 @@ _self_name := $(strip $(lastword 1,$(subst /, ,$(_self_path))))
 all:
 	@true
 
-.PHONY: import-keys
-import-keys:
-	@true
-
 .PHONY: get-sources
 get-sources:
 	@true
