@@ -39,6 +39,7 @@ installQubesRepo
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="developers"
 
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
+[ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="$BUILDER_DIR/$SRC_DIR/template-whonix/keys/whonix-developer-patrick.asc"
 [ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
 [ -n "$whonix_repository_uri" ] || whonix_repository_uri="http://www.whonix.org/download/whonixdevelopermetafiles/internal/"
 [ -n "$whonix_repository_components" ] || whonix_repository_components="main"
@@ -48,7 +49,7 @@ installQubesRepo
 if [ "$whonix_signing_key_fingerprint" = "none" ]; then
    info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore apt-key adding as requested."
 else
-   $chroot_cmd apt-key adv --keyserver "$gpg_keyserver" --recv-key "$whonix_signing_key_fingerprint"
+   cat "$whonix_signing_key_file" | $chroot_cmd apt-key add -
 
    ## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
    $chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
