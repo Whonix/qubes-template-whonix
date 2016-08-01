@@ -19,17 +19,18 @@ before_script:
  - export CHECK_BRANCH=1
  - export BRANCH_template_whonix=master
  - export GIT_URL_template_whonix=https://github.com/adrelanos/qubes-template-whonix.git
+ - export BUILDER_PLUGINS="template-whonix builder-debian"
  - env
 script: ~/qubes-builder/scripts/travis-build linux-template-builder
 after_success:
  - ls -l ~/qubes-builder/qubes-src/linux-template-builder/rpm/noarch
 language: generic
 env:
-# - DISTS_VM=jessie USE_QUBES_REPO_VERSION=3.1
-# - DISTS_VM=jessie+standard USE_QUBES_REPO_VERSION=3.1
-# - DISTS_VM=stretch USE_QUBES_REPO_VERSION=3.1
-# - DISTS_VM=jessie USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
-# - DISTS_VM=jessie+standard USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
-# - DISTS_VM=stretch USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
- - BUILDER_PLUGINS="template-whonix builder-debian" DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
-# - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
+ - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.1
+ - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.1
+ - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.1 USE_QUBES_REPO_TESTING=1
+ - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.1 USE_QUBES_REPO_TESTING=1
+ - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.2
+ - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.2
+ - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
+ - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
