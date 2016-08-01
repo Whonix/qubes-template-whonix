@@ -3,12 +3,15 @@ dist: trusty
 install: git clone https://github.com/QubesOS/qubes-builder ~/qubes-builder
 # debootstrap in trusty is old...
 before_script:
- - mkdir --parents ~/qubes-builder/keyrings/git
- - chmod --recursive 700 ~/qubes-builder/keyrings/git
- - GNUPGHOME=~/qubes-builder/keyrings/git gpg --keyserver keys.gnupg.net --recv-keys "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
- - GNUPGHOME=~/qubes-builder/keyrings/git gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
- - echo '916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA:6:' | GNUPGHOME=~/qubes-builder/keyrings/git gpg --import-ownertrust
- - GNUPGHOME=~/qubes-builder/keyrings/git gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
+ - export GNUPGHOME=~/qubes-builder/keyrings/git
+ - mkdir --parents "$GNUPGHOME"
+ - chmod --recursive 700 "$GNUPGHOME"
+ - gpg --import ~/qubes-builder/qubes-developers-keys.asc
+ - echo '427F11FD0FAA4B080123F01CDDFA1A3E36879494:6:' | gpg --import-ownertrust
+ - gpg --keyserver keys.gnupg.net --recv-keys "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
+ - gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
+ - echo '916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA:6:' | gpg --import-ownertrust
+ - gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
  - sudo ln -s sid /usr/share/debootstrap/scripts/stretch
  - export VERBOSE=3
  - export DEBUG=1
