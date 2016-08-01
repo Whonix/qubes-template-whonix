@@ -11,6 +11,8 @@ before_script:
  - export BRANCH_template_whonix=master
  - export GIT_URL_template_whonix=https://github.com/adrelanos/qubes-template-whonix.git
  - env
+ - gpg --recv-keys "916B 8D99 C38E AF5E 8ADC  7A2A 8D66 066A 2EEA CCDA"
+ - gpg --fingerprint "916B 8D99 C38E AF5E 8ADC  7A2A 8D66 066A 2EEA CCDA"
 script: ~/qubes-builder/scripts/travis-build linux-template-builder
 after_success:
  - ls -l ~/qubes-builder/qubes-src/linux-template-builder/rpm/noarch
