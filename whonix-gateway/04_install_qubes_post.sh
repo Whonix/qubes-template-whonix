@@ -36,7 +36,7 @@ mount --bind /dev "${INSTALLDIR}/dev"
 installQubesRepo
 
 ## TODO: set to jessie
-[ -n "$whonix_repository_suite" ] || whonix_repository_suite="developers"
+[ -n "$whonix_repository_suite" ] || whonix_repository_suite="jessie-proposed-updates"
 
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
 [ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="$BUILDER_DIR/$SRC_DIR/template-whonix/keys/whonix-developer-patrick.asc"
