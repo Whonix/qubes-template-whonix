@@ -2,7 +2,18 @@ sudo: required
 dist: trusty
 install: git clone https://github.com/QubesOS/qubes-builder ~/qubes-builder
 # debootstrap in trusty is old...
-before_script: sudo ln -s sid /usr/share/debootstrap/scripts/stretch
+before_script:
+- sudo ln -s sid /usr/share/debootstrap/scripts/stretch
+- echo "
+VERBOSE = 3
+DEBUG = 1
+#REPO_PROXY = http://127.0.0.1:3142
+CHECK_BRANCH = 1
+
+BRANCH_template_whonix = master
+GIT_URL_template_whonix = https://github.com/adrelanos/qubes-template-whonix.git
+" | tee ~/qubes-builder/override.conf
+- cat ~/qubes-builder/override.conf
 script: ~/qubes-builder/scripts/travis-build linux-template-builder
 after_success:
  - ls -l ~/qubes-builder/qubes-src/linux-template-builder/rpm/noarch
