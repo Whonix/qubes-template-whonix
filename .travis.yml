@@ -3,6 +3,8 @@ dist: trusty
 install: git clone https://github.com/QubesOS/qubes-builder ~/qubes-builder
 # debootstrap in trusty is old...
 before_script:
+ - mkdir --parents ~/qubes-builder/keyrings/git
+ - chmod --recursive 700 ~/qubes-builder/keyrings/git
  - GNUPGHOME=~/qubes-builder/keyrings/git gpg --recv-keys "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
  - GNUPGHOME=~/qubes-builder/keyrings/git gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
  - echo '916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA:6:' | GNUPGHOME=~/qubes-builder/keyrings/git gpg --import-ownertrust
