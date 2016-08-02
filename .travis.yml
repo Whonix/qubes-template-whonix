@@ -1,7 +1,6 @@
 sudo: required
 dist: trusty
 install: git clone https://github.com/QubesOS/qubes-builder ~/qubes-builder
-# debootstrap in trusty is old...
 before_script:
  - export GNUPGHOME=~/qubes-builder/keyrings/git
  - mkdir --parents "$GNUPGHOME"
@@ -12,6 +11,7 @@ before_script:
  - gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
  - echo '916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA:6:' | gpg --import-ownertrust
  - gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
+# debootstrap in trusty is old...
  - sudo ln -s sid /usr/share/debootstrap/scripts/stretch
  - export VERBOSE=3
  - export DEBUG=1
@@ -26,11 +26,11 @@ after_success:
  - ls -l ~/qubes-builder/qubes-src/linux-template-builder/rpm/noarch
 language: generic
 env:
- - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.1
- - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.1
+# - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.1
+# - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.1
  - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.1 USE_QUBES_REPO_TESTING=1
  - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.1 USE_QUBES_REPO_TESTING=1
- - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.2
- - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.2
+# - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.2
+# - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.2
  - DISTS_VM=whonix-gateway USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
  - DISTS_VM=whonix-workstation USE_QUBES_REPO_VERSION=3.2 USE_QUBES_REPO_TESTING=1
