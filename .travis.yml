@@ -11,8 +11,6 @@ before_script:
  - gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
  - echo '916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA:6:' | gpg --import-ownertrust
  - gpg --fingerprint "916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
-# debootstrap in trusty is old...
- - sudo ln -s sid /usr/share/debootstrap/scripts/stretch
  - export VERBOSE=3
  - export DEBUG=1
 #- export REPO_PROXY=http://127.0.0.1:3142
