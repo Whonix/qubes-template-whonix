@@ -30,6 +30,8 @@ fi
 
 mount --bind /dev "${INSTALLDIR}/dev"
 
+aptInstall apt-transport-https
+
 ## Install Qubes' repository so dependencies of the qubes-whonix package
 ## that gets installed by Whonix's build script will be available.
 ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
