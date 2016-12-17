@@ -37,7 +37,7 @@ aptInstall apt-transport-https
 ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
 installQubesRepo
 
-## TODO: set to jessie
+## Better to build from jessie-proposed-updates to test the upgrades.
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="jessie-proposed-updates"
 
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
