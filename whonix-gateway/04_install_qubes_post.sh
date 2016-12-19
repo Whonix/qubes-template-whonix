@@ -62,6 +62,7 @@ echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary
 aptUpdate
 
 [ -n "$DEBDEBUG" ] || export DEBDEBUG="1"
+[ -n "$tpo_downloader_debug" ] || export tpo_downloader_debug="1"
 
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
    aptInstall qubes-whonix-gateway
