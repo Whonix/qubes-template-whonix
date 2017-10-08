@@ -18,6 +18,7 @@ before_script:
  - export BRANCH_template_whonix=master
  - export GIT_URL_template_whonix=https://github.com/adrelanos/qubes-template-whonix.git
  - export BUILDER_PLUGINS="template-whonix builder-debian"
+ - export WHONIX_TBB_VERSION="7.0.6"
  - env
 script: ~/qubes-builder/scripts/travis-build linux-template-builder
 after_success:
