@@ -64,6 +64,12 @@ aptUpdate
 [ -n "$DEBDEBUG" ] || export DEBDEBUG="1"
 [ -n "$tpo_downloader_debug" ] || export tpo_downloader_debug="1"
 
+if [ -n "$WHONIX_TBB_VERSION" ]; then
+    mkdir -p "${INSTALLDIR}/etc/torbrowser.d"
+    echo "tbb_version=\"$WHONIX_TBB_VERSION\"" > \
+        "${INSTALLDIR}/etc/torbrowser.d/80_template_builder_override.conf"
+fi
+
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
    aptInstall qubes-whonix-gateway
 elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
@@ -80,6 +86,11 @@ if [ -e "${INSTALLDIR}/etc/apt/sources.list.d/debian.list" ]; then
     info ' Remove original sources.list (Whonix package anon-apt-sources-list \
 ships /etc/apt/sources.list.d/debian.list)'
     rm -f "${INSTALLDIR}/etc/apt/sources.list"
+fi
+
+if [ -n "$WHONIX_TBB_VERSION" ]; then
+    # cleanup override after initial install
+    rm -f "${INSTALLDIR}/etc/torbrowser.d/80_template_builder_override.conf"
 fi
 
 ## Maybe Enable Tor.
