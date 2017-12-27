@@ -1,6 +1,9 @@
 konsole.desktop
+org.kde.konsole.desktop
 dolphin.desktop
+org.kde.dolphin.desktop
 nautilus.desktop
+org.gnome.Nautilus.desktop
 whonixcheck.desktop
 gateway-reloadfirewall.desktop
 gateway-reloadtor.desktop
@@ -12,3 +15,4 @@ gateway-firsttimesetup.desktop
 gateway-arm.desktop
 gateway-tordata.desktop
 whonix_setup.desktop
+anon_connection_wizard.desktop

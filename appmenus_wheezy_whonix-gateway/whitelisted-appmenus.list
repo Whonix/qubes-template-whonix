@@ -1,8 +1,12 @@
 konsole.desktop
+org.kde.konsole.desktop
 dolphin.desktop
+org.kde.dolphin.desktop
 nautilus.desktop
+org.gnome.Nautilus.desktop
 whonixcheck.desktop
 gpk-application.desktop
+org.gnome.Packages.desktop
 whonix_repository.desktop
 gateway-firewall30default.desktop
 gateway-firewall50user.desktop
