@@ -1,6 +1,9 @@
 #!/bin/bash -e
 # vim: set ts=4 sw=4 sts=4 et :
 
+## Copyright (C) 2012 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
+## See the file COPYING for copying conditions.
+
 if [ "$VERBOSE" -ge 2 -o "$DEBUG" == "1" ]; then
     set -x
 fi
