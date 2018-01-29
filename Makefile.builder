@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-## Copyright (C) 2012 - 2014 Patrick Schleizer <adrelanos@riseup.net>
+## Copyright (C) 2012 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
 ## See the file COPYING for copying conditions.
 
 # Environment variables (set in builder.conf) that should be made available to
