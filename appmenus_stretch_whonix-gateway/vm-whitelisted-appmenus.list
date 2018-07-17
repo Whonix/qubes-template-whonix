@@ -16,3 +16,6 @@ gateway-arm.desktop
 gateway-tordata.desktop
 whonix_setup.desktop
 anon_connection_wizard.desktop
+sdwdate-gui.desktop
+tor-control-panel.desktop
+gateway-restarttor-gui.desktop
