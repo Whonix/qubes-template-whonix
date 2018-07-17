@@ -41,10 +41,7 @@ aptInstall apt-transport-https
 installQubesRepo
 
 ## Better to build from stretch-proposed-updates to test the upgrades.
-#[ -n "$whonix_repository_suite" ] || whonix_repository_suite="stretch-proposed-updates"
-
-## Build from stretch-developer for the time being.
-[ -n "$whonix_repository_suite" ] || whonix_repository_suite="stretch-developers"
+[ -n "$whonix_repository_suite" ] || whonix_repository_suite="stretch-proposed-updates"
 
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
 [ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="$BUILDER_DIR/$SRC_DIR/template-whonix/keys/whonix-developer-patrick.asc"
