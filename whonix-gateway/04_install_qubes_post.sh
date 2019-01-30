@@ -34,6 +34,7 @@ fi
 mount --bind /dev "${INSTALLDIR}/dev"
 
 aptInstall apt-transport-https
+aptInstall apt-transport-tor
 
 ## Install Qubes' repository so dependencies of the qubes-whonix package
 ## that gets installed by Whonix's build script will be available.
