@@ -41,14 +41,17 @@ aptInstall apt-transport-tor
 ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
 installQubesRepo
 
+if [ "$CI" = "true" ]; then
+   [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
+else
+   [ -n "$whonix_repository_uri" ] || whonix_repository_uri="tor+http://deb.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion"
+fi
+
 ## Better to build from stretch-proposed-updates to test the upgrades.
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="stretch-proposed-updates"
-
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
 [ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="$BUILDER_DIR/$SRC_DIR/template-whonix/keys/whonix-developer-patrick.asc"
 [ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
-#[ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
-[ -n "$whonix_repository_uri" ] || whonix_repository_uri="tor+http://deb.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion"
 [ -n "$whonix_repository_components" ] || whonix_repository_components="main"
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
