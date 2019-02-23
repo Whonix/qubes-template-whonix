@@ -52,6 +52,7 @@ installQubesRepo
 [ -n "$whonix_repository_components" ] || whonix_repository_components="main"
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
+[ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/whonix.gpg"
 
 if [ "$whonix_signing_key_fingerprint" = "none" ]; then
    info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore apt-key adding as requested."
@@ -60,6 +61,10 @@ else
 
    ## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
    $chroot_cmd apt-key adv --fingerprint "$whonix_signing_key_fingerprint"
+
+   ## Better than above using specific file rather than /etc/apt/trusted.gpg. Not yet tested.
+   #$chroot_cmd apt-key --keyring "$apt_target_key" add "$whonix_signing_key_file"
+   #$chroot_cmd apt-key --keyring "$apt_target_key" adv --fingerprint "$whonix_signing_key_fingerprint"
 fi
 
 echo "$whonix_repository_apt_line" > "${INSTALLDIR}/$whonix_repository_temporary_apt_sources_list"
