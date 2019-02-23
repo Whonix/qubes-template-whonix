@@ -44,7 +44,7 @@ installQubesRepo
 ## Debugging.
 env
 
-if [ "$CI" = "true" ]; then
+if [ ~ = /home/travis ]; then
    [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 else
    [ -n "$whonix_repository_uri" ] || whonix_repository_uri="tor+http://deb.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion"
