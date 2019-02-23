@@ -55,7 +55,7 @@ installQubesRepo
 [ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/whonix.gpg"
 
 if [ "$whonix_signing_key_fingerprint" = "none" ]; then
-   info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore apt-key adding as requested."
+   info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore not running apt-key adding as requested."
 else
    cat "$whonix_signing_key_file" | $chroot_cmd apt-key add -
 
