@@ -41,6 +41,9 @@ aptInstall apt-transport-tor
 ## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
 installQubesRepo
 
+## Debugging.
+env
+
 if [ "$CI" = "true" ]; then
    [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 else
