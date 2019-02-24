@@ -44,7 +44,8 @@ installQubesRepo
 ## Debugging.
 env
 
-if [ ~ = /home/travis ]; then
+## XXX: Environment variable CI=true is unavailable. Would be much more apprpriate.
+if [ "$BUILDER_DIR" = "/home/travis/qubes-builder" ]; then
    [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 else
    [ -n "$whonix_repository_uri" ] || whonix_repository_uri="tor+http://deb.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion"
