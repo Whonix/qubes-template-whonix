@@ -10,3 +10,5 @@ org.gnome.Packages.desktop
 whonix_repository.desktop
 whonix-repository-wizard.desktop
 anondist-torbrowser_update.desktop
+Thunar.desktop
+xfce4-terminal.desktop

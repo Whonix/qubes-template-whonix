@@ -11,3 +11,5 @@ whonix_repository.desktop
 whonix-repository-wizard.desktop
 gateway-firewall30default.desktop
 gateway-firewall50user.desktop
+Thunar.desktop
+xfce4-terminal.desktop
