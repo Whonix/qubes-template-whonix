@@ -48,7 +48,9 @@ env
 if [ "$BUILDER_DIR" = "/home/travis/qubes-builder" ]; then
    [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 else
-   [ -n "$whonix_repository_uri" ] || whonix_repository_uri="tor+http://deb.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion"
+   ## https://github.com/QubesOS/qubes-issues/issues/4957
+   #[ -n "$whonix_repository_uri" ] || whonix_repository_uri="tor+http://deb.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion"
+   [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 fi
 
 ## Better to build from buster-proposed-updates to test the upgrades.
