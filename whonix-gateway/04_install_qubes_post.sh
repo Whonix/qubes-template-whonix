@@ -66,19 +66,8 @@ fi
 if [ "$whonix_signing_key_fingerprint" = "none" ]; then
    info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore not running apt-key adding as requested."
 else
-   ## Debugging. To be removed.
-   ls -la "$BUILDER_DIR/" || true
-   ls -la "$BUILDER_DIR/$SRC_DIR/" || true
-   ls -la "$BUILDER_DIR/$SRC_DIR/template-whonix/" || true
-   ls -la "$BUILDER_DIR/$SRC_DIR/template-whonix/keys/" || true
-   ls -la "$BUILDER_DIR/$SRC_DIR/template-whonix/keys/whonix-developer-patrick.asc" || true
-   ls -la "$whonix_signing_key_file" || true
-
    ## Debugging.
    test -f "$whonix_signing_key_file"
-
-   ## Debugging. To be removed.
-   $chroot_cmd sh -x apt-key --keyring "$apt_target_key" add "$whonix_signing_key_file" || true
 
    $chroot_cmd apt-key --keyring "$apt_target_key" add "$whonix_signing_key_file"
 
