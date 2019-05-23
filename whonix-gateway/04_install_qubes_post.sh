@@ -63,13 +63,20 @@ fi
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
 [ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/whonix.gpg"
 
+whonix_signing_key_file_name="$(basename "$whonix_signing_key_file")"
+
 if [ "$whonix_signing_key_fingerprint" = "none" ]; then
    info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore not running apt-key adding as requested."
 else
    ## Debugging.
    test -f "$whonix_signing_key_file"
 
-   $chroot_cmd apt-key --keyring "$apt_target_key" add "$whonix_signing_key_file"
+   cp "$whonix_signing_key_file" "${INSTALLDIR}/${TMPDIR}/${whonix_signing_key_file_name}"
+
+   ## Debugging.
+   $chroot_cmd test -f "${TMPDIR}/${whonix_signing_key_file_name}"
+
+   $chroot_cmd apt-key --keyring "$apt_target_key" add "${TMPDIR}/${whonix_signing_key_file_name}"
 
    ## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
    $chroot_cmd apt-key --keyring "$apt_target_key" adv --fingerprint "$whonix_signing_key_fingerprint"
