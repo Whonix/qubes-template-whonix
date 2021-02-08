@@ -4,6 +4,6 @@ dolphin.desktop
 org.kde.dolphin.desktop
 nautilus.desktop
 org.gnome.Nautilus.desktop
-whonixcheck.desktop
+systemcheck.desktop
 Thunar.desktop
 xfce4-terminal.desktop

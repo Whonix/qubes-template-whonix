@@ -4,7 +4,7 @@ dolphin.desktop
 org.kde.dolphin.desktop
 nautilus.desktop
 org.gnome.Nautilus.desktop
-whonixcheck.desktop
+systemcheck.desktop
 whonix-irc-chat-support.desktop
 janondisttorbrowser.desktop
 anondist-torbrowser_update.desktop

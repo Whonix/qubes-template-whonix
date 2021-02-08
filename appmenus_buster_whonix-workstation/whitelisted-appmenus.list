@@ -4,11 +4,10 @@ dolphin.desktop
 org.kde.dolphin.desktop
 nautilus.desktop
 org.gnome.Nautilus.desktop
-whonixcheck.desktop
+systemcheck.desktop
 gpk-application.desktop
 org.gnome.Packages.desktop
-whonix_repository.desktop
-whonix-repository-wizard.desktop
+repository-dist-wizard.desktop
 anondist-torbrowser_update.desktop
 Thunar.desktop
 xfce4-terminal.desktop

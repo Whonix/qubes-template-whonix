@@ -4,11 +4,10 @@ dolphin.desktop
 org.kde.dolphin.desktop
 nautilus.desktop
 org.gnome.Nautilus.desktop
-whonixcheck.desktop
+systemcheck.desktop
 gpk-application.desktop
 org.gnome.Packages.desktop
-whonix_repository.desktop
-whonix-repository-wizard.desktop
+repository-dist-wizard.desktop
 gateway-firewall30default.desktop
 gateway-firewall50user.desktop
 Thunar.desktop
