@@ -63,6 +63,14 @@ fi
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
 [ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/derivative.asc"
 
+if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
+   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-gateway"
+elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
+   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-workstation"
+else
+   error "TEMPLATE_FLAVOR is neither whonix-gateway nor whonix-workstation, it is: ${TEMPLATE_FLAVOR}"
+fi
+
 whonix_signing_key_file_name="$(basename "$whonix_signing_key_file")"
 
 if [ "$whonix_signing_key_fingerprint" = "none" ]; then
@@ -96,13 +104,7 @@ if [ -n "$WHONIX_TBB_VERSION" ]; then
         "${INSTALLDIR}/etc/torbrowser.d/80_template_builder_override.conf"
 fi
 
-if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
-   aptInstall qubes-whonix-gateway
-elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
-   aptInstall qubes-whonix-workstation
-else
-   error "TEMPLATE_FLAVOR is neither whonix-gateway nor whonix-workstation, it is: ${TEMPLATE_FLAVOR}"
-fi
+aptInstall "$whonix_meta_package_to_install"
 
 uninstallQubesRepo
 
