@@ -61,7 +61,7 @@ fi
 [ -n "$whonix_repository_components" ] || whonix_repository_components="main"
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
-[ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/whonix.gpg"
+[ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/derivative.gpg"
 
 whonix_signing_key_file_name="$(basename "$whonix_signing_key_file")"
 
