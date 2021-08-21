@@ -61,12 +61,12 @@ fi
 [ -n "$whonix_repository_components" ] || whonix_repository_components="main"
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
-[ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/derivative.gpg"
+[ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/derivative.asc"
 
 whonix_signing_key_file_name="$(basename "$whonix_signing_key_file")"
 
 if [ "$whonix_signing_key_fingerprint" = "none" ]; then
-   info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore not running apt-key adding as requested."
+   info "whonix_signing_key_fingerprint is set to '$whonix_signing_key_fingerprint', therefore not running copying gpg key adding as requested."
 else
    ## Debugging.
    test -f "$whonix_signing_key_file"
@@ -76,7 +76,8 @@ else
    ## Debugging.
    $chroot_cmd test -f "${TMPDIR}/${whonix_signing_key_file_name}"
 
-   $chroot_cmd apt-key --keyring "$apt_target_key" add "${TMPDIR}/${whonix_signing_key_file_name}"
+   ## https://forums.whonix.org/t/apt-key-deprecation-apt-2-2-changes/11240
+   $chroot_cmd cp --verbose "${TMPDIR}/${whonix_signing_key_file_name}" "$apt_target_key"
 
    ## Sanity test. apt-key adv would exit non-zero if not exactly that fingerprint in apt's keyring.
    $chroot_cmd apt-key --keyring "$apt_target_key" adv --fingerprint "$whonix_signing_key_fingerprint"
