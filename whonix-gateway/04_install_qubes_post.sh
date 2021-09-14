@@ -59,9 +59,9 @@ fi
 [ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="$BUILDER_DIR/$SRC_DIR/template-whonix/keys/whonix-developer-patrick.asc"
 [ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
 [ -n "$whonix_repository_components" ] || whonix_repository_components="main"
-[ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
+[ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb [signed-by=/usr/share/keyrings/derivative.asc] $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
-[ -n "$apt_target_key" ] || apt_target_key="/etc/apt/trusted.gpg.d/derivative.asc"
+[ -n "$apt_target_key" ] || apt_target_key="/usr/share/keyrings/derivative.asc"
 
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
    [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-gateway"
