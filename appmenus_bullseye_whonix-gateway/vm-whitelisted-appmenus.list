@@ -13,5 +13,5 @@ restart-tor-gui.desktop
 sdwdate-gui.desktop
 tor-control-panel.desktop
 gateway-restarttor-gui.desktop
-Thunar.desktop
+thunar.desktop
 xfce4-terminal.desktop

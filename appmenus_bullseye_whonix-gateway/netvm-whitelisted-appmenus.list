@@ -11,5 +11,5 @@ gateway-tordata.desktop
 anon_connection_wizard.desktop
 restart-tor-gui.desktop
 tor-control-panel.desktop
-Thunar.desktop
+thunar.desktop
 xfce4-terminal.desktop

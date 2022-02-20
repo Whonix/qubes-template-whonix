@@ -2,5 +2,5 @@ systemcheck.desktop
 repository-dist-wizard.desktop
 gateway-firewall30default.desktop
 gateway-firewall50user.desktop
-Thunar.desktop
+thunar.desktop
 xfce4-terminal.desktop
