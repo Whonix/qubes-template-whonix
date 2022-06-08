@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # vim: set ts=4 sw=4 sts=4 et :
 
 # ==============================================================================
@@ -60,7 +60,7 @@ gpg --import qubes-developers-keys.asc
 #
 # Install Keys For:
 # -----------------
-#   'Marek Marczykowski-Górecki' (lead developer) and
+#   'Marek Marczykowski-Gorecki' (lead developer) and
 #   'Qubes Master Signing Key'
 #     You will only be prompted to install keys if you have not already
 #     installed them manually. It is a good idea to install them manually
