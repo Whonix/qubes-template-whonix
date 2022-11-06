@@ -28,10 +28,22 @@ if [ "$DEBUG" == "1" ]; then
     set -x
 fi
 
+#
+# Handle legacy builder
+#
+
+if [ -n "${SCRIPTSDIR}" ]; then
+    TEMPLATE_CONTENT_DIR="${SCRIPTSDIR}"
+fi
+
+if [ -n "${INSTALLDIR}" ]; then
+    INSTALL_DIR="${INSTALLDIR}"
+fi
+
 # shellcheck source=qubesbuilder/plugins/template_debian/vars.sh
-source "${PLUGINS_DIR}/template_debian/vars.sh"
+source "${TEMPLATE_CONTENT_DIR}/vars.sh"
 # shellcheck source=qubesbuilder/plugins/template_debian/distribution.sh
-source "${PLUGINS_DIR}/template_debian/distribution.sh"
+source "${TEMPLATE_CONTENT_DIR}/distribution.sh"
 
 ##### '-------------------------------------------------------------------------
 debug ' Whonix post installation cleanup'

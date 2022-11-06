@@ -27,11 +27,29 @@ if [ "$DEBUG" == "1" ]; then
     set -x
 fi
 
+#
+# Handle legacy builder
+#
+
+if [ -n "${PLUGINS_DIR}" ]; then
+    FLAVOR_DIR="${PLUGINS_DIR}/template_whonix"
+else
+    FLAVOR_DIR="${BUILDER_DIR}/${SRC_DIR}/template-whonix"
+fi
+
+if [ -n "${SCRIPTSDIR}" ]; then
+    TEMPLATE_CONTENT_DIR="${SCRIPTSDIR}"
+fi
+
+if [ -n "${INSTALLDIR}" ]; then
+    INSTALL_DIR="${INSTALLDIR}"
+fi
+
 # Source external scripts
 # shellcheck source=qubesbuilder/plugins/template_debian/vars.sh
-source "${PLUGINS_DIR}/template_debian/vars.sh"
+source "${TEMPLATE_CONTENT_DIR}/vars.sh"
 # shellcheck source=qubesbuilder/plugins/template_debian/distribution.sh
-source "${PLUGINS_DIR}/template_debian/distribution.sh"
+source "${TEMPLATE_CONTENT_DIR}/distribution.sh"
 
 ## If .prepared_debootstrap has not been completed, don't continue.
 exitOnNoFile "${INSTALL_DIR}/${TMPDIR}/.prepared_qubes" "prepared_qubes installation has not completed!... Exiting"
@@ -64,7 +82,7 @@ env
 ## Better to build from bullseye-testers to test the upgrades.
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="bullseye-testers"
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
-[ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="${PLUGINS_DIR}/template_whonix/keys/whonix-developer-patrick.asc"
+[ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="${FLAVOR_DIR}/keys/whonix-developer-patrick.asc"
 [ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
 [ -n "$whonix_repository_components" ] || whonix_repository_components="main"
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb [signed-by=/usr/share/keyrings/derivative.asc] $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"

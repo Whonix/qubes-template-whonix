@@ -56,6 +56,7 @@ class WhonixTemplateBuilderPlugin(DEBTemplateBuilderPlugin):
                 "TEMPLATE_ENV_WHITELIST": "DERIVATIVE_APT_REPOSITORY_OPTS WHONIX_ENABLE_TOR WHONIX_TBB_VERSION",
                 "TEMPLATE_FLAVOR_DIR": f"+whonix-gateway:{executor.get_plugins_dir()}/template_whonix +whonix-workstation:{executor.get_plugins_dir()}/template_whonix",
                 "APPMENUS_DIR": str(executor.get_plugins_dir() / "template_whonix"),
+                "FLAVOR_DIR": str(executor.get_plugins_dir() / "template_whonix"),
                 # FIXME: Pass values with the help of plugin options
                 "DERIVATIVE_APT_REPOSITORY_OPTS": "stable",
                 "WHONIX_ENABLE_TOR": "0",
