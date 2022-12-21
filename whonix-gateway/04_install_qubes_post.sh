@@ -31,8 +31,8 @@ fi
 # Handle legacy builder
 #
 
-if [ -z "${FLAVOR_DIR}" ]; then
-    FLAVOR_DIR="${BUILDER_DIR}/${SRC_DIR}/template-whonix"
+if [ -z "${FLAVORS_DIR}" ]; then
+    FLAVORS_DIR="${BUILDER_DIR}/${SRC_DIR}/template-whonix"
 fi
 
 if [ -n "${SCRIPTSDIR}" ]; then
@@ -80,7 +80,7 @@ env
 ## Better to build from bullseye-testers to test the upgrades.
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="bullseye-testers"
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
-[ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="${FLAVOR_DIR}/keys/whonix-developer-patrick.asc"
+[ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="${FLAVORS_DIR}/keys/whonix-developer-patrick.asc"
 [ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
 [ -n "$whonix_repository_components" ] || whonix_repository_components="main"
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb [signed-by=/usr/share/keyrings/derivative.asc] $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
