@@ -3,7 +3,7 @@
 #
 # The Qubes OS Project, http://www.qubes-os.org
 #
-# Copyright (C) 2015-2021 Patrick Schleizer <adrelanos@whonix.org>
+# Copyright (C) 2012 - 2022 ENCRYPTED SUPPORT LP <adrelanos@whonix.org>
 # Copyright (C) 2015 Jason Mehring <nrgaway@gmail.com>
 # Copyright (C) 2017 Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
 # Copyright (C) 2022 Frédéric Pierret <frederic@invisiblethingslab.com>
