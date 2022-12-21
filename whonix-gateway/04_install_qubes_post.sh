@@ -75,14 +75,20 @@ env
 
 ## https://github.com/QubesOS/qubes-issues/issues/4957
 #[ -n "$whonix_repository_uri" ] || whonix_repository_uri="tor+http://deb.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion"
+[ -n "$whonix_repository_uri" ] || kicksecure_repository_uri="https://deb.kicksecure.com"
 [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 
 ## Better to build from bullseye-testers to test the upgrades.
-[ -n "$whonix_repository_suite" ] || whonix_repository_suite="bullseye-testers"
-[ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
-[ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="${FLAVORS_DIR}/keys/whonix-developer-patrick.asc"
+[ -n "$kicksecure_repository_suite" ] || kicksecure_repository_suite="bullseye-testers"
+[ -n "$whonix_repository_suite" ] || whonix_repository_suite="$kicksecure_repository_suite"
+[ -n "$kicksecure_signing_key_fingerprint" ] || kicksecure_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
+[ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="$kicksecure_signing_key_fingerprint"
+[ -n "$kicksecure_signing_key_file" ] || kicksecure_signing_key_file="${FLAVORS_DIR}/keys/whonix-developer-patrick.asc"
+[ -n "$whonix_signing_key_file" ] || whonix_signing_key_file="$kicksecure_signing_key_file"
 [ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
-[ -n "$whonix_repository_components" ] || whonix_repository_components="main"
+[ -n "$kicksecure_repository_components" ] || kicksecure_repository_components="main"
+[ -n "$whonix_repository_components" ] || whonix_repository_components="$kicksecure_repository_components"
+[ -n "$kicksecure_repository_apt_line" ] || kicksecure_repository_apt_line="deb [signed-by=/usr/share/keyrings/derivative.asc] $kicksecure_repository_uri $kicksecure_repository_suite $kicksecure_repository_components"
 [ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb [signed-by=/usr/share/keyrings/derivative.asc] $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
 [ -n "$apt_target_key" ] || apt_target_key="/usr/share/keyrings/derivative.asc"
@@ -115,7 +121,8 @@ else
    chroot_cmd apt-key --keyring "$apt_target_key" adv --fingerprint "$whonix_signing_key_fingerprint"
 fi
 
-echo "$whonix_repository_apt_line" > "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
+echo "$kicksecure_repository_apt_line" > "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
+echo "$whonix_repository_apt_line" >> "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
 
 aptUpdate
 
