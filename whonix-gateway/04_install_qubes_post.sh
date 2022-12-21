@@ -31,9 +31,7 @@ fi
 # Handle legacy builder
 #
 
-if [ -n "${PLUGINS_DIR}" ]; then
-    FLAVOR_DIR="${PLUGINS_DIR}/template_whonix"
-else
+if [ -z "${FLAVOR_DIR}" ]; then
     FLAVOR_DIR="${BUILDER_DIR}/${SRC_DIR}/template-whonix"
 fi
 
@@ -46,9 +44,9 @@ if [ -n "${INSTALLDIR}" ]; then
 fi
 
 # Source external scripts
-# shellcheck source=qubesbuilder/plugins/template_debian/vars.sh
+# shellcheck disable=SC1091
 source "${TEMPLATE_CONTENT_DIR}/vars.sh"
-# shellcheck source=qubesbuilder/plugins/template_debian/distribution.sh
+# shellcheck disable=SC1091
 source "${TEMPLATE_CONTENT_DIR}/distribution.sh"
 
 ## If .prepared_debootstrap has not been completed, don't continue.
