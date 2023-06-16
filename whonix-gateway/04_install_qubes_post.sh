@@ -78,8 +78,8 @@ env
 [ -n "$whonix_repository_uri" ] || kicksecure_repository_uri="https://deb.kicksecure.com"
 [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 
-## Better to build from bullseye-testers to test the upgrades.
-[ -n "$kicksecure_repository_suite" ] || kicksecure_repository_suite="bullseye-testers"
+## Better to build from bookworm-testers to test the upgrades.
+[ -n "$kicksecure_repository_suite" ] || kicksecure_repository_suite="bookworm-testers"
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="$kicksecure_repository_suite"
 [ -n "$kicksecure_signing_key_fingerprint" ] || kicksecure_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="$kicksecure_signing_key_fingerprint"
