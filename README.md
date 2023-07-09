@@ -1,2 +1,2 @@
-Qubes OS Whonix distribution template
+Qubes-Whonix Template
 ===
