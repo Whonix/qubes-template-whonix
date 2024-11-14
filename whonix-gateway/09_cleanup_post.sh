@@ -49,6 +49,4 @@ source "${TEMPLATE_CONTENT_DIR}/distribution.sh"
 debug ' Whonix post installation cleanup'
 ##### '-------------------------------------------------------------------------
 
-if [ -x "${INSTALL_DIR}/usr/libexec/initializer-dist/chroot-scripts-post.d/80_cleanup" ]; then
-   chroot_cmd "/usr/libexec/initializer-dist/chroot-scripts-post.d/80_cleanup"
-fi
+chroot_cmd "/usr/libexec/initializer-dist/chroot-scripts-post.d/80_cleanup"
