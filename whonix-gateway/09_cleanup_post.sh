@@ -23,10 +23,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-
 if [ "$DEBUG" == "1" ]; then
     set -x
 fi
+
+debug "$0: START"
 
 #
 # Handle legacy builder
@@ -49,4 +50,10 @@ source "${TEMPLATE_CONTENT_DIR}/distribution.sh"
 debug ' Whonix post installation cleanup'
 ##### '-------------------------------------------------------------------------
 
-chroot_cmd "/usr/libexec/initializer-dist/chroot-scripts-post.d/80_cleanup"
+## Check which chroot scripts we got.
+chroot_cmd run-parts --verbose --test "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
+
+## Run the chroot scripts.
+chroot_cmd run-parts --verbose --exit-on-error "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
+
+debug "$0: END"
