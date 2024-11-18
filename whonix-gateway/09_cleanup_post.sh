@@ -50,10 +50,13 @@ source "${TEMPLATE_CONTENT_DIR}/distribution.sh"
 debug 'Whonix chroot-scripts'
 ##### '-------------------------------------------------------------------------
 
-## Check which chroot scripts we got.
-chroot_cmd run-parts --verbose --test "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
+## https://github.com/Whonix/qubes-template-whonix/commit/319c569a944a1c3b442da09be39804a0c09f648e#r149186334
+if test -d "/usr/libexec/initializer-dist/chroot-scripts-post.d/" ; then
+    ## Check which chroot scripts we got.
+    chroot_cmd run-parts --verbose --test "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
 
-## Run the chroot scripts.
-chroot_cmd run-parts --verbose --exit-on-error "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
+    ## Run the chroot scripts.
+    chroot_cmd run-parts --verbose --exit-on-error "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
+fi
 
 debug "$0: END"
