@@ -27,7 +27,7 @@ if [ "$DEBUG" == "1" ]; then
     set -x
 fi
 
-debug "$0: START"
+true "$0: START"
 
 #
 # Handle legacy builder
