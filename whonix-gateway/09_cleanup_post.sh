@@ -34,11 +34,11 @@ debug "$0: START"
 #
 
 if [ -n "${SCRIPTSDIR}" ]; then
-    TEMPLATE_CONTENT_DIR="${SCRIPTSDIR}"
+  TEMPLATE_CONTENT_DIR="${SCRIPTSDIR}"
 fi
 
 if [ -n "${INSTALLDIR}" ]; then
-    INSTALL_DIR="${INSTALLDIR}"
+  INSTALL_DIR="${INSTALLDIR}"
 fi
 
 # shellcheck source=qubesbuilder/plugins/template_debian/vars.sh
@@ -52,11 +52,11 @@ debug 'Whonix chroot-scripts'
 
 ## https://github.com/Whonix/qubes-template-whonix/commit/319c569a944a1c3b442da09be39804a0c09f648e#r149186334
 if test -d "/usr/libexec/initializer-dist/chroot-scripts-post.d/" ; then
-    ## Check which chroot scripts we got.
-    chroot_cmd run-parts --verbose --test "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
+  ## Check which chroot scripts we got.
+  chroot_cmd run-parts --verbose --test "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
 
-    ## Run the chroot scripts.
-    chroot_cmd run-parts --verbose --exit-on-error "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
+  ## Run the chroot scripts.
+  chroot_cmd run-parts --verbose --exit-on-error "/usr/libexec/initializer-dist/chroot-scripts-post.d/"
 fi
 
 debug "$0: END"
