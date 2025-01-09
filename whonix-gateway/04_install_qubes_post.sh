@@ -169,6 +169,12 @@ UWT_DEV_PASSTHROUGH="1" aptRemove ntpdate || true
 UWT_DEV_PASSTHROUGH="1" DEBIAN_FRONTEND="noninteractive" DEBIAN_PRIORITY="critical" DEBCONF_NOWARNINGS="yes" \
     chroot_cmd $eatmydata_maybe apt-get "${APT_GET_OPTIONS[@]}" autoremove
 
+## Configure repository-dist to set up the Whonix repos on first boot
+## DERIVATIVE_APT_REPOSITORY_OPTS is expected to be set by builder
+chroot_cmd systemctl enable repository-dist-initializer.service
+mkdir -p "${INSTALL_DIR}/var/lib/repository-dist"
+echo "${DERIVATIVE_APT_REPOSITORY_OPTS}" > "${INSTALL_DIR}/var/lib/repository-dist/derivative_apt_repository_opts"
+
 ## Cleanup.
 umount_all "${INSTALL_DIR}/" || true
 trap - ERR EXIT
