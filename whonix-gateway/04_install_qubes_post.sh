@@ -94,7 +94,7 @@ env
 [ -n "$apt_target_key" ] || apt_target_key="/usr/share/keyrings/derivative.asc"
 
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
-   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-gateway"
+   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-gateway qubes-core-agent-passwordless-root"
 elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
    [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-workstation user-sysmaint-split"
 else
