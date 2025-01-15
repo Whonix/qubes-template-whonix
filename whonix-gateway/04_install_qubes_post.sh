@@ -96,7 +96,7 @@ env
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
    [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-gateway"
 elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
-   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-workstation"
+   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-workstation user-sysmaint-split"
 else
    error "TEMPLATE_FLAVOR is neither whonix-gateway nor whonix-workstation, it is: ${TEMPLATE_FLAVOR}"
 fi
@@ -134,7 +134,9 @@ if [ -n "$WHONIX_TBB_VERSION" ]; then
     echo "tbb_version=\"$WHONIX_TBB_VERSION\"" > "${INSTALL_DIR}/etc/torbrowser.d/80_template_builder_override.conf"
 fi
 
-aptInstall "$whonix_meta_package_to_install"
+for whonix_package_to_install in $whonix_meta_package_to_install; do
+   aptInstall "$whonix_package_to_install"
+done
 
 uninstallQubesRepo
 
