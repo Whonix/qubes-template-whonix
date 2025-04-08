@@ -9,7 +9,7 @@ ifeq ($(PACKAGE_SET),vm)
   endif
 endif
 
-all: 
+all:
 	@true
 
 install:
