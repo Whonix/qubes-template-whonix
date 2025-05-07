@@ -134,9 +134,14 @@ if [ -n "$WHONIX_TBB_VERSION" ]; then
     echo "tbb_version=\"$WHONIX_TBB_VERSION\"" > "${INSTALL_DIR}/etc/torbrowser.d/80_template_builder_override.conf"
 fi
 
-for whonix_package_to_install in $whonix_meta_package_to_install; do
-   aptInstall "$whonix_package_to_install"
-done
+## https://github.com/QubesOS/qubes-issues/issues/9936#issuecomment-2852757837
+## Once '/etc/resolv.conf' is modified, no further APT downloads are possible
+## (without complex '/etc/resolv.conf' handling.)
+# for whonix_package_to_install in $whonix_meta_package_to_install; do
+#    aptInstall "$whonix_package_to_install"
+# done
+
+aptInstall $whonix_meta_package_to_install
 
 uninstallQubesRepo
 
