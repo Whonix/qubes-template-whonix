@@ -128,6 +128,8 @@ aptUpdate
 
 [ -n "$DEBDEBUG" ] || export DEBDEBUG="1"
 [ -n "$tpo_downloader_debug" ] || export tpo_downloader_debug="1"
+## https://forums.whonix.org/t/tor-browser-not-installed-by-default-in-qubes-template-whonix-workstation-17-4-3-0-202505132012-r4-3/21612
+[ -n "$anon_shared_inst_tb" ] || export anon_shared_inst_tb="closed"
 
 if [ -n "$WHONIX_TBB_VERSION" ]; then
     mkdir -p "${INSTALL_DIR}/etc/torbrowser.d"
