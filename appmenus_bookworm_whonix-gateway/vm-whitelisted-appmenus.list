@@ -1,9 +1,12 @@
 systemcheck.desktop
+whonix-firewall30default.desktop
+whonix-firewall50user.desktop
 whonix-reloadfirewall.desktop
 gateway-reloadtor.desktop
 gateway-stoptor.desktop
 gateway-torrc.desktop
 gateway-torrcexamples.desktop
+gateway-firsttimesetup.desktop
 gateway-nyx.desktop
 gateway-tordata.desktop
 anon_connection_wizard.desktop
@@ -11,4 +14,5 @@ restart-tor-gui.desktop
 sdwdate-gui.desktop
 tor-control-panel.desktop
 thunar.desktop
+xfce4-settings-manager.desktop
 xfce4-terminal.desktop

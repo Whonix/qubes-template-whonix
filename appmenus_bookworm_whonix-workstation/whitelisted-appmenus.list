@@ -1,5 +1,6 @@
+sysmaint-panel.desktop
 systemcheck.desktop
 repository-dist-wizard.desktop
 anondist-torbrowser_update.desktop
-thunar.desktop
+xfce4-settings-manager.desktop
 xfce4-terminal.desktop
