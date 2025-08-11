@@ -88,9 +88,19 @@ env
 [ -n "$gpg_keyserver" ] || gpg_keyserver="keys.gnupg.net"
 [ -n "$kicksecure_repository_components" ] || kicksecure_repository_components="main"
 [ -n "$whonix_repository_components" ] || whonix_repository_components="$kicksecure_repository_components"
-[ -n "$kicksecure_repository_apt_line" ] || kicksecure_repository_apt_line="deb [signed-by=/usr/share/keyrings/derivative.asc] $kicksecure_repository_uri $kicksecure_repository_suite $kicksecure_repository_components"
-[ -n "$whonix_repository_apt_line" ] || whonix_repository_apt_line="deb [signed-by=/usr/share/keyrings/derivative.asc] $whonix_repository_uri $whonix_repository_suite $whonix_repository_components"
-[ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.list"
+[ -n "$kicksecure_repository_sources" ] || kicksecure_repository_sources="Types: deb
+URIs: $kicksecure_repository_uri
+Suites: $kicksecure_repository_suite
+Components: $kicksecure_repository_components
+Enabled: yes
+Signed-By: /usr/share/keyrings/derivative.asc"
+[ -n "$whonix_repository_sources" ] || whonix_repository_sources="Types: deb
+URIs: $whonix_repository_uri
+Suites: $whonix_repository_suite
+Components: $whonix_repository_components
+Enabled: yes
+Signed-By: /usr/share/keyrings/derivative.asc"
+[ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.sources"
 [ -n "$apt_target_key" ] || apt_target_key="/usr/share/keyrings/derivative.asc"
 
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
@@ -121,8 +131,8 @@ else
    chroot_cmd apt-key --keyring "$apt_target_key" adv --fingerprint "$whonix_signing_key_fingerprint"
 fi
 
-echo "$kicksecure_repository_apt_line" > "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
-echo "$whonix_repository_apt_line" >> "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
+echo "$kicksecure_repository_sources" > "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
+echo "$whonix_repository_sources" >> "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
 
 aptUpdate
 
@@ -149,8 +159,8 @@ uninstallQubesRepo
 
 rm -f "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
 
-if [ -e "${INSTALL_DIR}/etc/apt/sources.list.d/debian.list" ]; then
-    info 'Remove original sources.list (Whonix package anon-apt-sources-list ships /etc/apt/sources.list.d/debian.list)'
+if [ -e "${INSTALL_DIR}/etc/apt/sources.list.d/debian.sources" ]; then
+    info 'Remove original sources file (Kicksecure package anon-apt-sources-list ships /etc/apt/sources.list.d/debian.sources)'
     rm -f "${INSTALL_DIR}/etc/apt/sources.list"
 fi
 
