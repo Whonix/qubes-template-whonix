@@ -14,5 +14,5 @@ restart-tor-gui.desktop
 sdwdate-gui.desktop
 tor-control-panel.desktop
 thunar.desktop
-xfce4-settings-manager.desktop
-xfce4-terminal.desktop
+lxqt-config.desktop
+qterminal.desktop

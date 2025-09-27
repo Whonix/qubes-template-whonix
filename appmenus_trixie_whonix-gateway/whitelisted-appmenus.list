@@ -3,5 +3,5 @@ systemcheck.desktop
 repository-dist-wizard.desktop
 whonix-firewall30default.desktop
 whonix-firewall50user.desktop
-xfce4-settings-manager.desktop
-xfce4-terminal.desktop
+lxqt-config.desktop
+qterminal.desktop
