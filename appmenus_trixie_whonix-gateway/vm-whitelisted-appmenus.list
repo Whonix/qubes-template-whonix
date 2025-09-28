@@ -13,6 +13,6 @@ anon_connection_wizard.desktop
 restart-tor-gui.desktop
 sdwdate-gui.desktop
 tor-control-panel.desktop
-thunar.desktop
+pcmanfm-qt.desktop
 lxqt-config.desktop
 qterminal.desktop
