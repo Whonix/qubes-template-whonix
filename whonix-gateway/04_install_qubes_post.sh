@@ -78,8 +78,9 @@ env
 [ -n "$whonix_repository_uri" ] || kicksecure_repository_uri="https://deb.kicksecure.com"
 [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 
-## Better to build from trixie-testers to test the upgrades.
-[ -n "$kicksecure_repository_suite" ] || kicksecure_repository_suite="trixie-testers"
+## TODO: Better to build from trixie-testers to test the upgrades.
+## Only trixie-developers has packages right now.
+[ -n "$kicksecure_repository_suite" ] || kicksecure_repository_suite="trixie-developers"
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="$kicksecure_repository_suite"
 [ -n "$kicksecure_signing_key_fingerprint" ] || kicksecure_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="$kicksecure_signing_key_fingerprint"
@@ -101,12 +102,13 @@ Components: $whonix_repository_components
 Enabled: yes
 Signed-By: /usr/share/keyrings/derivative.asc"
 [ -n "$whonix_repository_temporary_apt_sources_list" ] || whonix_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/whonix_build.sources"
+[ -n "$kicksecure_repository_temporary_apt_sources_list" ] || kicksecure_repository_temporary_apt_sources_list="/etc/apt/sources.list.d/kicksecure_build.sources"
 [ -n "$apt_target_key" ] || apt_target_key="/usr/share/keyrings/derivative.asc"
 
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
-   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-gateway qubes-core-agent-passwordless-root"
+   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="whonix-gateway-qubes-gui-lxqt qubes-core-agent-passwordless-root"
 elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
-   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="qubes-whonix-workstation user-sysmaint-split"
+   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="whonix-workstation-qubes-gui-lxqt user-sysmaint-split"
 else
    error "TEMPLATE_FLAVOR is neither whonix-gateway nor whonix-workstation, it is: ${TEMPLATE_FLAVOR}"
 fi
@@ -135,7 +137,7 @@ else
    chroot_cmd rm "$temp_key_file"
 fi
 
-echo "$kicksecure_repository_sources" > "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
+echo "$kicksecure_repository_sources" > "${INSTALL_DIR}/$kicksecure_repository_temporary_apt_sources_list"
 echo "$whonix_repository_sources" >> "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
 
 aptUpdate
@@ -162,6 +164,7 @@ aptInstall $whonix_meta_package_to_install
 uninstallQubesRepo
 
 rm -f "${INSTALL_DIR}/$whonix_repository_temporary_apt_sources_list"
+rm -f "${INSTALL_DIR}/$kicksecure_repository_temporary_apt_sources_list"
 
 if [ -e "${INSTALL_DIR}/etc/apt/sources.list.d/debian.sources" ]; then
     info 'Remove original sources file (Kicksecure package anon-apt-sources-list ships /etc/apt/sources.list.d/debian.sources)'
