@@ -106,7 +106,7 @@ Signed-By: /usr/share/keyrings/derivative.asc"
 [ -n "$apt_target_key" ] || apt_target_key="/usr/share/keyrings/derivative.asc"
 
 if [ "${TEMPLATE_FLAVOR}" = "whonix-gateway" ]; then
-   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="whonix-gateway-qubes-gui-lxqt qubes-core-agent-passwordless-root"
+   [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="whonix-gateway-qubes-gui-lxqt user-sysmaint-split"
 elif [ "${TEMPLATE_FLAVOR}" = "whonix-workstation" ]; then
    [ -n "$whonix_meta_package_to_install" ] || whonix_meta_package_to_install="whonix-workstation-qubes-gui-lxqt user-sysmaint-split"
 else
