@@ -78,9 +78,7 @@ env
 [ -n "$whonix_repository_uri" ] || kicksecure_repository_uri="https://deb.kicksecure.com"
 [ -n "$whonix_repository_uri" ] || whonix_repository_uri="https://deb.whonix.org"
 
-## TODO: Better to build from trixie-testers to test the upgrades.
-## Only trixie-developers has packages right now.
-[ -n "$kicksecure_repository_suite" ] || kicksecure_repository_suite="trixie-developers"
+[ -n "$kicksecure_repository_suite" ] || kicksecure_repository_suite="trixie-testers"
 [ -n "$whonix_repository_suite" ] || whonix_repository_suite="$kicksecure_repository_suite"
 [ -n "$kicksecure_signing_key_fingerprint" ] || kicksecure_signing_key_fingerprint="916B8D99C38EAF5E8ADC7A2A8D66066A2EEACCDA"
 [ -n "$whonix_signing_key_fingerprint" ] || whonix_signing_key_fingerprint="$kicksecure_signing_key_fingerprint"
