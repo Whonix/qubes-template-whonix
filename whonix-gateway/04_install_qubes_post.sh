@@ -67,7 +67,7 @@ aptInstall apt-transport-tor
 
 ## Install Qubes' repository so dependencies of the qubes-whonix package
 ## that gets installed by Whonix's build script will be available.
-## (Cant be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
+## (Cannot be done in '.whonix_prepared', because installQubesRepo's 'mount' does not survive reboots.)
 installQubesRepo
 
 ## Debugging.
